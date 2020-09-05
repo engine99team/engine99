@@ -1,7 +1,3 @@
-//
-// Created by godknows on 20.08.2020.
-//
-
 #ifndef ENGINE99_NUKLEAR_INCLUDE_H
 #define ENGINE99_NUKLEAR_INCLUDE_H
 

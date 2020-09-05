@@ -1,0 +1,47 @@
+language: c
+dist: bionic
+arch:
+  - amd64
+  - arm64
+sudo: required
+os:
+  - linux
+compiler:
+  - gcc
+  - clang
+script:
+  - mkdir build && cd build
+  - cmake ..
+  - make
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-7
+      - g++-7
+      - cmake
+      - libsdl2-dev
+      - libsdl2-2.0-0
+      - libjpeg-dev
+      - libwebp-dev
+      - libtiff5-dev
+      - libsdl2-image-dev
+      - libsdl2-image-2.0-0
+      - libjpeg-dev
+      - libwebp-dev
+      - libtiff5-dev
+      - libsdl2-image-dev
+      - libsdl2-image-2.0-0
+      - libmikmod-dev
+      - libfishsound1-dev
+      - libsmpeg-dev
+      - liboggz2-dev
+      - libflac-dev
+      - libfluidsynth-dev
+      - libsdl2-mixer-dev
+      - libsdl2-mixer-2.0-0
+      - libfreetype6-dev
+      - libsdl2-ttf-dev
+      - libsdl2-ttf-2.0-0
+      - libglew-dev

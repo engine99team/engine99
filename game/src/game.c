@@ -5,8 +5,9 @@
 
 int init_game (void) {
     init_example();
+    return 0;
 }
 
 int game_event (SDL_Event* event) {
-
+    return 0;
 }

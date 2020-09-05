@@ -1,7 +1,3 @@
-//
-// Created by godknows on 20.08.2020.
-//
-
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>

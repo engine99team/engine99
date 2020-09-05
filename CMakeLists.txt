@@ -1,9 +1,8 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.12)
 project(engine99 C)
 set(CMAKE_C_STANDARD 99)
 
 set(GAME_DIR game)
-
 set(MODULES core physics ${GAME_DIR})
 
 find_package(SDL2 REQUIRED)
@@ -11,6 +10,8 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS})
+include_directories(${OPENGL_INCLUDE_DIRS})
+include_directories(${GLEW_INCLUDE_DIRS})
 
 include_directories(ThirdParty)
 file(GLOB THIRD_PARTY_SRC ThirdParty/*.c)
@@ -22,7 +23,6 @@ foreach(MODULE ${MODULES})
     include_directories(${MODULE_INCLUDES})
     add_library(${MODULE} ${MODULE_SRC})
 endforeach()
-
 
 add_executable(engine99 main.c)
 target_link_libraries(engine99 ${MODULES} ThirdPartyLibs ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})

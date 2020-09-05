@@ -40,4 +40,5 @@ void test_imgui (ecs_iter_t* it) {
 
 int init_example(void) {
     ECS_SYSTEM(world, test_imgui, imgui_stage, global_tag)
+    return 0;
 }
