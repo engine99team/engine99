@@ -1,0 +1,10 @@
+#ifndef ENGINE99_CONFIG_H
+#define ENGINE99_CONFIG_H
+
+#define CONFIG_APP_NAME "hello world"
+#define CONFIG_WINDOW_TITLE "Hello world"
+#define CONFIG_WINDOW_WIDTH 1280
+#define CONFIG_WINDOW_HEIGHT 720
+
+
+#endif //ENGINE99_CONFIG_H

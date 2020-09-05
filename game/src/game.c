@@ -1,0 +1,12 @@
+#include <nuklear_include.h>
+#include "globals.h"
+#include "stages.h"
+#include "example.h"
+
+int init_game (void) {
+    init_example();
+}
+
+int game_event (SDL_Event* event) {
+
+}
