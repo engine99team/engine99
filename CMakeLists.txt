@@ -3,11 +3,14 @@ project(engine99 C)
 set(CMAKE_C_STANDARD 99)
 
 set(GAME_DIR game)
-set(MODULES core physics ${GAME_DIR})
+set(MODULES core physics graphics ${GAME_DIR})
 
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${OPENGL_INCLUDE_DIRS})
