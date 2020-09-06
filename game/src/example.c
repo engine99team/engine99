@@ -12,6 +12,8 @@ float vertices[] = {
         0.0f,  0.5f, 0.0f
 };
 
+struct nk_colorf triangle_color = {0.5f, 0.1f, 0.2f, 1};
+
 void example_imgui (ecs_iter_t* it) {
     if (nk_begin(nk_ctx, "Demo", nk_rect(50, 50, 230, 250),
                  NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
@@ -43,13 +45,29 @@ void example_imgui (ecs_iter_t* it) {
             bg.a = nk_propertyf(nk_ctx, "#A:", 0, bg.a, 1.0f, 0.01f,0.005f);
             nk_combo_end(nk_ctx);
         }
+        nk_layout_row_dynamic(nk_ctx, 20, 1);
+        nk_label(nk_ctx, "triangle:", NK_TEXT_LEFT);
+        nk_layout_row_dynamic(nk_ctx, 25, 1);
+        if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(triangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
+            nk_layout_row_dynamic(nk_ctx, 120, 1);
+            triangle_color = nk_color_picker(nk_ctx, triangle_color, NK_RGBA);
+            nk_layout_row_dynamic(nk_ctx, 25, 1);
+            triangle_color.r = nk_propertyf(nk_ctx, "#R:", 0, triangle_color.r, 1.0f, 0.01f,0.005f);
+            triangle_color.g = nk_propertyf(nk_ctx, "#G:", 0, triangle_color.g, 1.0f, 0.01f,0.005f);
+            triangle_color.b = nk_propertyf(nk_ctx, "#B:", 0, triangle_color.b, 1.0f, 0.01f,0.005f);
+            triangle_color.a = nk_propertyf(nk_ctx, "#A:", 0, triangle_color.a, 1.0f, 0.01f,0.005f);
+            nk_combo_end(nk_ctx);
+        }
     }
     nk_end(nk_ctx);
 }
 
 void example_render_triangle(ecs_iter_t* it) {
     glUseProgram(shader_program);
+    uint32_t color = glGetUniformLocation(shader_program, "color");
+    glUniform4f(color, triangle_color.r, triangle_color.g, triangle_color.b, triangle_color.a);
     glBindVertexArray(VAO);
+
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
