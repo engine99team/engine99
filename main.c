@@ -18,11 +18,11 @@ int main() {
     nk_sdl_font_stash_end();
     init_stages();
 
-    ECS_ENTITY(world, global_entity, global_tag)
+    ECS_ENTITY(world, global_entity, global_tag);
 
-    ECS_SYSTEM(world, pre_render_window_system, pre_render_stage, global_tag)
-    ECS_SYSTEM(world, post_render_window_system, post_render_stage, global_tag)
-    ECS_SYSTEM(world, process_events_system, events_stage, global_tag)
+    ECS_SYSTEM(world, pre_render_window_system, pre_render_stage, global_tag);
+    ECS_SYSTEM(world, post_render_window_system, post_render_stage, global_tag);
+    ECS_SYSTEM(world, process_events_system, events_stage, global_tag);
 
     init_game();
 
