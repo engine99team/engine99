@@ -11,3 +11,8 @@ int init_game (void) {
 int game_event (SDL_Event* event) {
     return 0;
 }
+
+int destroy_game (void) {
+    destroy_example();
+    return 0;
+}

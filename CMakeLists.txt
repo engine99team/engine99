@@ -3,7 +3,7 @@ project(engine99 C)
 set(CMAKE_C_STANDARD 99)
 
 set(GAME_DIR game)
-set(MODULES core physics graphics ${GAME_DIR})
+set(MODULES core physics graphics)
 
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -27,5 +27,10 @@ foreach(MODULE ${MODULES})
     add_library(${MODULE} ${MODULE_SRC})
 endforeach()
 
+file(GLOB GAME_SRC ${GAME_DIR}/src/*.c)
+set(GAME_INCLUDES ${GAME_DIR}/include/)
+include_directories(${GAME_INCLUDES})
+add_library(GameModules ${GAME_SRC})
+
 add_executable(engine99 main.c)
-target_link_libraries(engine99 ${MODULES} ThirdPartyLibs ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(engine99 GameModules ${MODULES} ThirdPartyLibs ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})

@@ -9,7 +9,6 @@ ECS_TAG_EXTERN(render_stage);
 ECS_TAG_EXTERN(gui_stage);
 ECS_TAG_EXTERN(imgui_stage);
 ECS_TAG_EXTERN(post_render_stage);
-ECS_TAG_EXTERN(global_tag);
 
 int init_stages (void);
 

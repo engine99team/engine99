@@ -9,7 +9,6 @@ ECS_TAG_DECLARE(render_stage);
 ECS_TAG_DECLARE(gui_stage);
 ECS_TAG_DECLARE(imgui_stage);
 ECS_TAG_DECLARE(post_render_stage);
-ECS_TAG_DECLARE(global_tag);
 
 int init_stages (void) {
     ECS_TAG_DEFINE(world, events_stage);
@@ -19,7 +18,6 @@ int init_stages (void) {
     ECS_TAG_DEFINE(world, gui_stage);
     ECS_TAG_DEFINE(world, imgui_stage);
     ECS_TAG_DEFINE(world, post_render_stage);
-    ECS_TAG_DEFINE(world, global_tag);
     ECS_PIPELINE(world, pipeline, events_stage, update_stage, \
                  gui_stage, imgui_stage, \
                  pre_render_stage, render_stage, post_render_stage)

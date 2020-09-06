@@ -2,8 +2,17 @@
 #include <nuklear_include.h>
 #include "globals.h"
 #include "stages.h"
+#include "graphics.h"
+#include <log.h>
 
-void test_imgui (ecs_iter_t* it) {
+GLuint shader_program, VBO, VAO;
+float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f,  0.5f, 0.0f
+};
+
+void example_imgui (ecs_iter_t* it) {
     if (nk_begin(nk_ctx, "Demo", nk_rect(50, 50, 230, 250),
                  NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
                  NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
@@ -38,7 +47,36 @@ void test_imgui (ecs_iter_t* it) {
     nk_end(nk_ctx);
 }
 
+void example_render_triangle(ecs_iter_t* it) {
+    glUseProgram(shader_program);
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
 int init_example(void) {
-    ECS_SYSTEM(world, test_imgui, imgui_stage, global_tag)
+    create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
+
+    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &VAO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
+    ECS_SYSTEM(world, example_render_triangle, render_stage, global_tag)
+    return 0;
+}
+
+int destroy_example(void) {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
     return 0;
 }

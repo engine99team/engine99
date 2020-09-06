@@ -6,16 +6,14 @@
 #include <SDL2/SDL_opengl.h>
 
 //ECS
-
 extern ecs_world_t* world;
+ECS_TAG_EXTERN(global_tag);
 
 //Render
-
+extern SDL_GLContext gl_context;
 
 //Window
-
 extern bool quit_flag;
-extern SDL_GLContext gl_context;
 extern SDL_Event event;
 extern SDL_Window* window;
 extern int window_width;

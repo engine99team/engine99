@@ -6,6 +6,7 @@
 
 ecs_world_t* world;
 bool quit_flag;
+ECS_TAG_DECLARE(global_tag);
 
 SDL_Window* window;
 int window_width, window_height;

@@ -2,5 +2,6 @@
 #define ENGINE99_EXAMPLE_H
 
 int init_example(void);
+int destroy_example(void);
 
 #endif //ENGINE99_EXAMPLE_H

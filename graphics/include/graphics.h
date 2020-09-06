@@ -1,7 +1,3 @@
-//
-// Created by godknows on 06.09.2020.
-//
-
 #ifndef ENGINE99_GRAPHICS_H
 #define ENGINE99_GRAPHICS_H
 
@@ -9,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-int load_shader(const char* filepath, GLuint* shader);
+int load_shader(const char* filepath, GLenum shader_type, GLuint* shader);
+int create_shader_program(const char* frag_filepath, const char* vert_filepath, GLuint* shader_program);
+
 
 #endif //ENGINE99_GRAPHICS_H
