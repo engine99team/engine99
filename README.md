@@ -7,7 +7,15 @@ imgui, flecs as ECS framework.
 
 ## Build
 
-## Install
+1. Install dependencies: [SDL2](https://lazyfoo.net/tutorials/SDL/01_hello_SDL/linux/index.php) and [GLEW](http://glew.sourceforge.net/install.html).
+1. `mkdir build && cd build`
+1. `cmake ..` \
+    By default this line build game for `game` directory, but you can specify your game with `cmake .. -DGAME_DIR=custom_game`
+1. `make`
+
+## API
+
+TODO
 
 ## Features, I'd like to implement:
 * Main features (rendering, input, physics, sound system and other)
