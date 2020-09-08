@@ -134,3 +134,22 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     fclose(png_file);
     return 0;
 }
+
+int load_png_texture(const char* filepath, GLuint* texture) {
+    uint32_t width, height;
+    int res;
+    unsigned char* data;
+    GLuint local_texture;
+    res = load_png_data(filepath, &width, &height, &data);
+    if (res != 0) {
+        log_error("Can't load png data");
+        return -1;
+    }
+    glGenTextures(1, &local_texture);
+    glBindTexture(GL_TEXTURE_2D, local_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    *texture = local_texture;
+    free(data);
+    return 0;
+}

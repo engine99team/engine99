@@ -3,7 +3,6 @@ dist: bionic
 arch:
   - amd64
   - arm64
-sudo: required
 os:
   - linux
 compiler:
