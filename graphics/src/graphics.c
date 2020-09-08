@@ -85,3 +85,52 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
     glDeleteShader(frag_shader);
     return 0;
 }
+
+int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsigned char **data) {
+    FILE* png_file;
+    unsigned char *out_data;
+    size_t out_size;
+    int res;
+    png_file = fopen(filepath, "rb");
+    if  (png_file == NULL) {
+        log_error("Can't open png file: %s", filepath);
+        return -1;
+    }
+    res = spng_set_png_file(png_ctx, png_file);
+    if (res != 0) {
+        log_error("Error while loading png file: %s", spng_strerror(res));
+        fclose(png_file);
+        return -1;
+    }
+    struct spng_ihdr ihdr;
+    res = spng_get_ihdr(png_ctx, &ihdr);
+    if (res != 0) {
+        log_error("Error while getting size of png file: %s", spng_strerror(res));
+        fclose(png_file);
+        return -1;
+    }
+    *height = ihdr.height;
+    *width = ihdr.width;
+    res = spng_decoded_image_size(png_ctx, SPNG_FMT_PNG, &out_size);
+    if (res != 0) {
+        log_error("Error while getting size of png file: %s", spng_strerror(res));
+        fclose(png_file);
+        return -1;
+    }
+    out_data = (unsigned char *)malloc(out_size);
+    if (out_data == NULL) {
+        fclose(png_file);
+        log_error("Can't allocate memory for png buffer");
+        return -1;
+    }
+    res = spng_decode_image(png_ctx, out_data, out_size, SPNG_FMT_PNG, 0);
+    if (res != 0) {
+        log_error("Error while decoding png file: %s", spng_strerror(res));
+        free(out_data);
+        fclose(png_file);
+        return -1;
+    }
+    *data = out_data;
+    fclose(png_file);
+    return 0;
+}
