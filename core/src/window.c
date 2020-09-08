@@ -22,12 +22,12 @@ int create_window() {
     }
 
     gl_context = SDL_GL_CreateContext(window);
-
+#ifndef __APPLE__
     if (glewInit() != GLEW_OK) {
         log_error("Failed to setup GLEW\n");
         return 1;
     }
-
+#endif
     return 0;
 }
 

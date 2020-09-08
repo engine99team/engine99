@@ -1,8 +1,13 @@
 #ifndef ENGINE99_GRAPHICS_H
 #define ENGINE99_GRAPHICS_H
 
+#if __APPLE__
+    #define GL_SILENCE_DEPRECATION
+    #include <OpenGL/gl3.h>
+#else
+    #include <GL/glew.h>
+#endif
 #include "globals.h"
-#include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <spng.h>

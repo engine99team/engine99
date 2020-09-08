@@ -1,25 +1,65 @@
 language: c
 dist: bionic
-arch:
-  - amd64
-  - arm64
-  - ppc64le
-os:
-  - linux
-compiler:
-  - gcc
-  - clang
-script:
-  - mkdir build && cd build
-  - cmake ..
-  - make
+stages:
+  - linux build
+  - mac os build
+jobs:
+  include:
+    - stage: linux build
+      name: linux_amd64_gcc
+      os: linux
+      arch: amd64
+      compiler: gcc
+      script:
+        - mkdir build && cd build
+        - cmake ..
+        - make
+    - name: linux_amd64_clang
+      os: linux
+      arch: amd64
+      compiler: clang
+      script:
+        - mkdir build && cd build
+        - cmake ..
+        - make
+    - name: linux_arm64_gcc
+      os: linux
+      arch: arm64
+      compiler: gcc
+      script:
+        - mkdir build && cd build
+        - cmake ..
+        - make
+    - name: linux_arm64_clang
+      os: linux
+      arch: arm64
+      compiler: clang
+      script:
+        - mkdir build && cd build
+        - cmake ..
+        - make
+    - name: linux_ppc64le_gcc
+      os: linux
+      arch: ppc64le
+      compiler: gcc
+      script:
+        - mkdir build && cd build
+        - cmake ..
+        - make
+    - stage: mac os build
+      name: mac os x
+      os: osx
+      osx_image: xcode11.2
+      script:
+        - mkdir build && cd build
+        - cmake ..
+        - make
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - gcc-7
-      - g++-7
       - cmake
       - libsdl2-dev
       - libsdl2-2.0-0
@@ -45,3 +85,10 @@ addons:
       - libsdl2-ttf-dev
       - libsdl2-ttf-2.0-0
       - libglew-dev
+  homebrew:
+    update: true
+    packages:
+      - cmake
+      - sdl2
+      - glfw
+      - glew

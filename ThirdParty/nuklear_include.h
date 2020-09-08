@@ -1,7 +1,13 @@
 #ifndef ENGINE99_NUKLEAR_INCLUDE_H
 #define ENGINE99_NUKLEAR_INCLUDE_H
 
-#include <GL/glew.h>
+#if __APPLE__
+    #define GL_SILENCE_DEPRECATION
+    #include <OpenGL/gl3.h>
+#else
+    #include <GL/glew.h>
+#endif
+#include "globals.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
