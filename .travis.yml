@@ -3,6 +3,7 @@ dist: bionic
 arch:
   - amd64
   - arm64
+  - ppc64le
 os:
   - linux
 compiler:
