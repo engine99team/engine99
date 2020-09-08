@@ -8,12 +8,14 @@ set(MODULES core physics graphics)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(ZLIB REQUIRED)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/game/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${GAME_DIR}/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${OPENGL_INCLUDE_DIRS})
 include_directories(${GLEW_INCLUDE_DIRS})
+include_directories(${ZLIB_INCLUDE_DIRS})
 
 include_directories(ThirdParty)
 file(GLOB THIRD_PARTY_SRC ThirdParty/*.c)
@@ -32,4 +34,5 @@ include_directories(${GAME_INCLUDES})
 add_library(GameModules ${GAME_SRC})
 
 add_executable(engine99 main.c)
-target_link_libraries(engine99 GameModules ${MODULES} ThirdPartyLibs ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} m)
+target_link_libraries(engine99 GameModules ${MODULES} ThirdPartyLibs
+        ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${ZLIB_LIBRARIES} m)

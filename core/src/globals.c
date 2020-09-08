@@ -2,6 +2,7 @@
 #include <nuklear_include.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <spng.h>
 
 
 ecs_world_t* world;
@@ -16,3 +17,5 @@ struct nk_colorf bg = {0.10f, 0.18f, 0.24f, 1.0f};
 
 struct nk_context *nk_ctx;
 struct nk_font_atlas *atlas;
+
+spng_ctx *png_ctx;
