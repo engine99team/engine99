@@ -33,4 +33,4 @@ include_directories(${GAME_INCLUDES})
 add_library(GameModules ${GAME_SRC})
 
 add_executable(engine99 main.c)
-target_link_libraries(engine99 GameModules ${MODULES} ThirdPartyLibs ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(engine99 GameModules ${MODULES} ThirdPartyLibs ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} m)
