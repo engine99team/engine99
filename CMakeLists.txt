@@ -9,8 +9,7 @@ find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/game/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${OPENGL_INCLUDE_DIRS})
