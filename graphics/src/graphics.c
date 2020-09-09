@@ -111,7 +111,7 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     }
     *height = ihdr.height;
     *width = ihdr.width;
-    res = spng_decoded_image_size(png_ctx, SPNG_FMT_PNG, &out_size);
+    res = spng_decoded_image_size(png_ctx, SPNG_FMT_RGBA8, &out_size);
     if (res != 0) {
         log_error("Error while getting size of png file: %s", spng_strerror(res));
         fclose(png_file);
@@ -123,7 +123,7 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
         log_error("Can't allocate memory for png buffer");
         return -1;
     }
-    res = spng_decode_image(png_ctx, out_data, out_size, SPNG_FMT_PNG, 0);
+    res = spng_decode_image(png_ctx, out_data, out_size, SPNG_FMT_RGBA8, 0);
     if (res != 0) {
         log_error("Error while decoding png file: %s", spng_strerror(res));
         free(out_data);
@@ -147,7 +147,7 @@ int load_png_texture(const char* filepath, GLuint* texture) {
     }
     glGenTextures(1, &local_texture);
     glBindTexture(GL_TEXTURE_2D, local_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA8, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     *texture = local_texture;
     free(data);
