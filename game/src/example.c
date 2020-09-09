@@ -5,14 +5,20 @@
 #include "graphics.h"
 #include <log.h>
 
-GLuint shader_program, VBO, VAO;
+GLuint shader_program, VBO, VAO, EBO, example_texture;
 float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f
+        0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
+        0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,
+        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f
 };
 
-struct nk_colorf triangle_color = {0.5f, 0.1f, 0.2f, 1};
+unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
+};
+
+struct nk_colorf rectangle_color = {0.5f, 0.1f, 0.2f, 1};
 
 void example_imgui (ecs_iter_t* it) {
     if (nk_begin(nk_ctx, "Demo", nk_rect(50, 50, 230, 250),
@@ -46,16 +52,16 @@ void example_imgui (ecs_iter_t* it) {
             nk_combo_end(nk_ctx);
         }
         nk_layout_row_dynamic(nk_ctx, 20, 1);
-        nk_label(nk_ctx, "triangle:", NK_TEXT_LEFT);
+        nk_label(nk_ctx, "rectangle:", NK_TEXT_LEFT);
         nk_layout_row_dynamic(nk_ctx, 25, 1);
-        if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(triangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
+        if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(rectangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
             nk_layout_row_dynamic(nk_ctx, 120, 1);
-            triangle_color = nk_color_picker(nk_ctx, triangle_color, NK_RGBA);
+            rectangle_color = nk_color_picker(nk_ctx, rectangle_color, NK_RGBA);
             nk_layout_row_dynamic(nk_ctx, 25, 1);
-            triangle_color.r = nk_propertyf(nk_ctx, "#R:", 0, triangle_color.r, 1.0f, 0.01f,0.005f);
-            triangle_color.g = nk_propertyf(nk_ctx, "#G:", 0, triangle_color.g, 1.0f, 0.01f,0.005f);
-            triangle_color.b = nk_propertyf(nk_ctx, "#B:", 0, triangle_color.b, 1.0f, 0.01f,0.005f);
-            triangle_color.a = nk_propertyf(nk_ctx, "#A:", 0, triangle_color.a, 1.0f, 0.01f,0.005f);
+            rectangle_color.r = nk_propertyf(nk_ctx, "#R:", 0, rectangle_color.r, 1.0f, 0.01f,0.005f);
+            rectangle_color.g = nk_propertyf(nk_ctx, "#G:", 0, rectangle_color.g, 1.0f, 0.01f,0.005f);
+            rectangle_color.b = nk_propertyf(nk_ctx, "#B:", 0, rectangle_color.b, 1.0f, 0.01f,0.005f);
+            rectangle_color.a = nk_propertyf(nk_ctx, "#A:", 0, rectangle_color.a, 1.0f, 0.01f,0.005f);
             nk_combo_end(nk_ctx);
         }
     }
@@ -64,30 +70,39 @@ void example_imgui (ecs_iter_t* it) {
 
 void example_render_triangle(ecs_iter_t* it) {
     glUseProgram(shader_program);
-    uint32_t color = glGetUniformLocation(shader_program, "color");
-    glUniform4f(color, triangle_color.r, triangle_color.g, triangle_color.b, triangle_color.a);
-    glBindVertexArray(VAO);
+    glUniform4f(glGetUniformLocation(shader_program, "color"), rectangle_color.r, rectangle_color.g, rectangle_color.b, rectangle_color.a);
+    glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
 
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, example_texture);
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 int init_example(void) {
     create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
-
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    load_png_texture("textures/test.png", &example_texture);
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_render_triangle, render_stage, global_tag)
     return 0;

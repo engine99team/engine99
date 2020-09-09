@@ -18,6 +18,7 @@ if(APPLE)
 endif()
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${GAME_DIR}/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${GAME_DIR}/textures/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/textures/)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${OPENGL_INCLUDE_DIRS})
