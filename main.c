@@ -11,6 +11,7 @@
 #include "stages.h"
 #include "core_components.h"
 #include "simple_meshes.h"
+#include "config.h"
 
 int main() {
     int res;
@@ -45,6 +46,9 @@ int main() {
     ECS_SYSTEM(world, process_events_system, events_stage, global_tag);
 
     res = init_game();
+#ifdef CONFIG_FPS
+    ecs_set_target_fps(world, CONFIG_FPS);
+#endif
     if (res != 0) {
         nk_sdl_shutdown();
         destroy_window();

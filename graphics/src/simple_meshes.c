@@ -77,7 +77,6 @@ int create_triangle(void) {
         .VBO = VBO,
         .VAO = VAO,
         .example_texture = example_texture});
-    log_info("Triangle created");
     return 0;
 }
 
@@ -125,7 +124,6 @@ int create_rectangle(void) {
                                                     .VAO = VAO,
                                                     .EBO = EBO,
                                                     .example_texture = example_texture});
-    log_info("Rectangle created");
     return 0;
 }
 

@@ -44,7 +44,7 @@ void example_imgui (ecs_iter_t* it) {
 void example_imgui_rect (ecs_iter_t* it) {
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
     struct nk_colorf* rectangle_color = (struct nk_colorf*)&mesh->color;
-    if (nk_begin(nk_ctx, "Demo Rect", nk_rect(50, 50, 230, 250),
+    if (nk_begin(nk_ctx, "Demo Rect", nk_rect(50, 300, 230, 250),
                  NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
                  NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
@@ -68,12 +68,12 @@ void example_imgui_rect (ecs_iter_t* it) {
 void example_imgui_tri (ecs_iter_t* it) {
     TriangleMesh* mesh = ecs_column(it, TriangleMesh, 1);
     struct nk_colorf* triangle_color = (struct nk_colorf*)&mesh->color;
-    if (nk_begin(nk_ctx, "Demo Triangle", nk_rect(50, 50, 230, 250),
+    if (nk_begin(nk_ctx, "Demo Triangle", nk_rect(280, 50, 230, 250),
                  NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
                  NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
     {
         nk_layout_row_dynamic(nk_ctx, 20, 1);
-        nk_label(nk_ctx, "rectangle:", NK_TEXT_LEFT);
+        nk_label(nk_ctx, "triangle:", NK_TEXT_LEFT);
         nk_layout_row_dynamic(nk_ctx, 25, 1);
         if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(*triangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
             nk_layout_row_dynamic(nk_ctx, 120, 1);
@@ -89,9 +89,23 @@ void example_imgui_tri (ecs_iter_t* it) {
     nk_end(nk_ctx);
 }
 
+void example_imgui_fps(ecs_iter_t* it) {
+    if (nk_begin(nk_ctx, "FPS counter", nk_rect(280, 300, 230, 100),
+                 NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_TITLE)) {
+        char buffer[10];
+        float dt = it->delta_system_time;
+        float fps = 1.0f/dt;
+        sprintf(buffer, "%.2f", fps);
+        nk_layout_row_dynamic(nk_ctx, 20, 1);
+        nk_label(nk_ctx, buffer, NK_TEXT_ALIGN_LEFT);
+    }
+    nk_end(nk_ctx);
+}
+
 int init_example(void) {
-    ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
+    ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag)
+    ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
     ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
     create_rectangle();
     create_triangle();
