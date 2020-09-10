@@ -25,7 +25,4 @@ extern struct nk_colorf bg;
 extern struct nk_context *nk_ctx;
 extern struct nk_font_atlas *atlas;
 
-//SPNG
-extern spng_ctx *png_ctx;
-
 #endif //ENGINE99_GLOBALS_H

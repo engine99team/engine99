@@ -86,6 +86,11 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
 }
 
 int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsigned char **data) {
+    spng_ctx *png_ctx = spng_ctx_new(0);
+    if (png_ctx == NULL) {
+        log_fatal("Can't init SPNG context");
+        return -1;
+    }
     FILE* png_file;
     unsigned char *out_data;
     size_t out_size;
@@ -129,6 +134,7 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
         fclose(png_file);
         return -1;
     }
+    spng_ctx_free(png_ctx);
     *data = out_data;
     fclose(png_file);
     return 0;
@@ -156,3 +162,4 @@ int load_png_texture(const char* filepath, GLuint* texture) {
     free(data);
     return 0;
 }
+

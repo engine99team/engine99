@@ -10,6 +10,7 @@
 #include "game.h"
 #include "stages.h"
 #include "core_components.h"
+#include "simple_meshes.h"
 
 int main() {
     int res;
@@ -33,16 +34,9 @@ int main() {
     }
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
-    png_ctx = spng_ctx_new(0);
-    if (png_ctx == NULL) {
-        log_fatal("Can't init SPNG context");
-        nk_sdl_shutdown();
-        destroy_window();
-        ecs_fini(world);
-        return -1;
-    }
     init_core_components();
     init_stages();
+    simple_meshes_init();
     ECS_TAG_DEFINE(world, global_tag);
     ECS_ENTITY(world, global_entity, global_tag);
 
@@ -52,7 +46,6 @@ int main() {
 
     res = init_game();
     if (res != 0) {
-        spng_ctx_free(png_ctx);
         nk_sdl_shutdown();
         destroy_window();
         ecs_fini(world);
@@ -63,8 +56,6 @@ int main() {
     while (!quit_flag) {
         ecs_progress(world, 0);
     }
-
-    spng_ctx_free(png_ctx);
     nk_sdl_shutdown();
     destroy_window();
     ecs_fini(world);

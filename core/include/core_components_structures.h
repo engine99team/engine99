@@ -3,7 +3,7 @@
 #include <flecs.h>
 #include <mathc.h>
 
-struct Transform {
+typedef struct Transform {
     // Position vector
     mfloat_t position[VEC3_SIZE];
     // Scale in local coordinates
