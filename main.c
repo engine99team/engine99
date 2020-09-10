@@ -9,6 +9,7 @@
 #include "globals.h"
 #include "game.h"
 #include "stages.h"
+#include "core_components.h"
 
 int main() {
     int res;
@@ -40,6 +41,7 @@ int main() {
         ecs_fini(world);
         return -1;
     }
+    init_core_components();
     init_stages();
     ECS_TAG_DEFINE(world, global_tag);
     ECS_ENTITY(world, global_entity, global_tag);
