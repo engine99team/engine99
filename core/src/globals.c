@@ -4,7 +4,6 @@
 #include <SDL2/SDL_opengl.h>
 #include <spng.h>
 
-
 ecs_world_t* world;
 bool quit_flag;
 ECS_TAG_DECLARE(global_tag);

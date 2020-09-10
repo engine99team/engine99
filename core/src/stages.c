@@ -1,7 +1,6 @@
 #include "globals.h"
 #include <flecs.h>
 
-
 ECS_TAG_DECLARE(pre_render_stage);
 ECS_TAG_DECLARE(events_stage);
 ECS_TAG_DECLARE(update_stage);

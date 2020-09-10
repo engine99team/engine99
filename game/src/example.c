@@ -75,7 +75,8 @@ void example_render_triangle(ecs_iter_t* it) {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, example_texture);
-
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
@@ -102,7 +103,7 @@ int init_example(void) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    load_png_texture("textures/test.png", &example_texture);
+    load_png_texture("textures/cat.png", &example_texture);
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_render_triangle, render_stage, global_tag)
     return 0;

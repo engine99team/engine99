@@ -25,7 +25,6 @@ int read_from_file(const char* filepath, GLchar* buffer, GLint size) {
     return 0;
 }
 
-
 int load_shader(const char* filepath, GLenum shader_type, GLuint* shader) {
     GLuint local_shader;
     int32_t status;

@@ -6,7 +6,6 @@
 #include "globals.h"
 #include "config.h"
 
-
 int create_window() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         log_error("Failed to init SDL");
