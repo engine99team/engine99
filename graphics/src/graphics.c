@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include <log.h>
+#include <stdlib.h>
 
 int get_size_of_file(const char* filepath, int32_t* file_size) {
     FILE* file = fopen(filepath, "rb");
@@ -93,7 +94,7 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     }
     FILE* png_file;
     unsigned char *out_data;
-    size_t out_size;
+    size_t out_size, out_width;
     int res;
     png_file = fopen(filepath, "rb");
     if  (png_file == NULL) {
@@ -113,26 +114,38 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
         fclose(png_file);
         return -1;
     }
-    *height = ihdr.height;
-    *width = ihdr.width;
     res = spng_decoded_image_size(png_ctx, SPNG_FMT_RGBA8, &out_size);
+    *height = ihdr.height;
+    *width =  ihdr.width;
     if (res != 0) {
         log_error("Error while getting size of png file: %s", spng_strerror(res));
         fclose(png_file);
         return -1;
     }
-    out_data = (unsigned char *)malloc(out_size);
+    out_data = (unsigned char *)malloc(*width * *height * 4);
     if (out_data == NULL) {
         fclose(png_file);
         log_error("Can't allocate memory for png buffer");
         return -1;
     }
-    res = spng_decode_image(png_ctx, out_data, out_size, SPNG_FMT_RGBA8, 0);
-    if (res != 0) {
-        log_error("Error while decoding png file: %s", spng_strerror(res));
-        free(out_data);
-        fclose(png_file);
+    res = spng_decode_image(png_ctx, NULL, 0, SPNG_FMT_RGBA8, SPNG_DECODE_PROGRESSIVE);
+    if(res)
+    {
+        log_error("progressive spng_decode_image() error: %s", spng_strerror(res));
         return -1;
+    }
+    out_width = out_size / ihdr.height;
+    struct spng_row_info row_info = {0};
+    do {
+        res = spng_get_row_info(png_ctx, &row_info);
+        if(res) break;
+        res = spng_decode_row(png_ctx, out_data + out_size - (row_info.row_num + 1) * out_width, out_width);
+    }
+    while(!res);
+
+    if(res != SPNG_EOI)
+    {
+        printf("progressive decode error: %s\n", spng_strerror(res));
     }
     spng_ctx_free(png_ctx);
     *data = out_data;
