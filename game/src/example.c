@@ -103,12 +103,15 @@ void example_imgui_fps(ecs_iter_t* it) {
 }
 
 int init_example(void) {
+    GLuint example_texture, shader_program;
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
     ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
-    create_rectangle();
-    create_triangle();
+    create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
+    load_png_texture("textures/cat.png", &example_texture);
+    create_rectangle(shader_program, example_texture);
+    create_triangle(shader_program, example_texture);
     return 0;
 }
 

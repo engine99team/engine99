@@ -5,13 +5,14 @@
 
 ECS_COMPONENT_DECLARE(TriangleMesh);
 ECS_COMPONENT_DECLARE(RectangleMesh);
+GLuint triangle_mesh = 0, rectangle_mesh = 0;
 
 void render_rectangle(ecs_iter_t* it) {
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
     glUseProgram(mesh->shader_program);
     glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color.x, mesh->color.y, mesh->color.z, mesh->color.w);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mesh->example_texture);
+    glBindTexture(GL_TEXTURE_2D, mesh->texture);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindVertexArray(mesh->VAO);
@@ -23,7 +24,7 @@ void render_triangle(ecs_iter_t* it) {
     glUseProgram(mesh->shader_program);
     glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color.x, mesh->color.y, mesh->color.z, mesh->color.w);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, mesh->example_texture);
+    glBindTexture(GL_TEXTURE_2D, mesh->texture);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindVertexArray(mesh->VAO);
@@ -34,7 +35,6 @@ void delete_triangle(ecs_iter_t* it) {
     TriangleMesh* mesh = ecs_column(it, TriangleMesh, 1);
     glDeleteVertexArrays(1, &mesh->VAO);
     glDeleteBuffers(1, &mesh->VBO);
-    glDeleteTextures(1, &mesh->example_texture);
 }
 
 void delete_rectangle(ecs_iter_t* it) {
@@ -42,19 +42,15 @@ void delete_rectangle(ecs_iter_t* it) {
     glDeleteVertexArrays(1, &mesh->VAO);
     glDeleteBuffers(1, &mesh->VBO);
     glDeleteBuffers(1, &mesh->EBO);
-    glDeleteTextures(1, &mesh->example_texture);
 }
 
-int create_triangle(void) {
-    GLuint shader_program, VBO, VAO, example_texture;
+int create_triangle(GLuint shader_program, GLuint texture) {
+    GLuint VBO, VAO;
     float triangle_vertices[] = {
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
             0.0f,  0.5f, 0.0f, 0.5f, 1.0f
     };
-    create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
-    glUseProgram(shader_program);
-    glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
 
@@ -70,18 +66,17 @@ int create_triangle(void) {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    load_png_texture("textures/cat.png", &example_texture);
     ECS_ENTITY(world, triangleEntity, TriangleMesh);
     ecs_set(world, triangleEntity, TriangleMesh, {.color = {0.0f, 0.0f, 0.0f, 1.0f},
         .shader_program = shader_program,
         .VBO = VBO,
         .VAO = VAO,
-        .example_texture = example_texture});
+        .texture = texture});
     return 0;
 }
 
-int create_rectangle(void) {
-    GLuint shader_program, VBO, VAO, EBO, example_texture;
+int create_rectangle(GLuint shader_program, GLuint texture) {
+    GLuint VBO, VAO, EBO;
     // Rectangle
     float rect_vertices[] = {
             0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
@@ -94,9 +89,6 @@ int create_rectangle(void) {
             0, 1, 3,
             1, 2, 3
     };
-    create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
-    glUseProgram(shader_program);
-    glUniform1i(glGetUniformLocation(shader_program, "ourTexture"), 0);
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &EBO);
@@ -116,24 +108,22 @@ int create_rectangle(void) {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    load_png_texture("textures/cat.png", &example_texture);
     ECS_ENTITY(world, rectangleEntity, RectangleMesh);
     ecs_set(world, rectangleEntity, RectangleMesh, {.color = {0.0f, 0.0f, 0.0f, 1.0f},
                                                     .shader_program = shader_program,
                                                     .VBO = VBO,
                                                     .VAO = VAO,
                                                     .EBO = EBO,
-                                                    .example_texture = example_texture});
+                                                    .texture = texture});
     return 0;
 }
 
-int simple_meshes_init(void) {
+int init_simple_meshes(void) {
     ECS_COMPONENT_DEFINE(world, TriangleMesh);
     ECS_COMPONENT_DEFINE(world, RectangleMesh);
     ECS_SYSTEM(world, render_rectangle, render_stage, RectangleMesh);
     ECS_TRIGGER(world, delete_rectangle, EcsOnRemove, RectangleMesh);
     ECS_SYSTEM(world, render_triangle, render_stage, TriangleMesh);
     ECS_TRIGGER(world, delete_triangle, EcsOnRemove, TriangleMesh);
-
     return 0;
 }

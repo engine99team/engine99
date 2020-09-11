@@ -3,6 +3,7 @@
 #include <log.h>
 #include <flecs.h>
 #include <nuklear_include.h>
+#include <graphics_components.h>
 
 #include "window.h"
 #include "events.h"
@@ -35,9 +36,10 @@ int main() {
     }
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
-    init_core_components();
     init_stages();
-    simple_meshes_init();
+    init_core_components();
+    init_graphics_components();
+    init_simple_meshes();
     ECS_TAG_DEFINE(world, global_tag);
     ECS_ENTITY(world, global_entity, global_tag);
 
