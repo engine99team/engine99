@@ -66,12 +66,17 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    ECS_ENTITY(world, triangleEntity, TriangleMesh);
+    ECS_ENTITY(world, triangleEntity, TriangleMesh, Transform);
     ecs_set(world, triangleEntity, TriangleMesh, {.color = {0.0f, 0.0f, 0.0f, 1.0f},
         .shader_program = shader_program,
         .VBO = VBO,
         .VAO = VAO,
         .texture = texture});
+    ecs_set(world, triangleEntity, Transform, {
+        .position = {transform->position.v[0], transform->position.v[1], transform->position.v[2]},
+        .rotation = {transform->rotation.v[0], transform->rotation.v[1], transform->rotation.v[2]},
+        .scale = {transform->scale.v[0], transform->scale.v[1], transform->scale.v[2]},
+    });
     return 0;
 }
 
@@ -108,13 +113,18 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    ECS_ENTITY(world, rectangleEntity, RectangleMesh);
+    ECS_ENTITY(world, rectangleEntity, RectangleMesh, Transform);
     ecs_set(world, rectangleEntity, RectangleMesh, {.color = {0.0f, 0.0f, 0.0f, 1.0f},
                                                     .shader_program = shader_program,
                                                     .VBO = VBO,
                                                     .VAO = VAO,
                                                     .EBO = EBO,
                                                     .texture = texture});
+    ecs_set(world, rectangleEntity, Transform, {
+        .position = {transform->position.v[0], transform->position.v[1], transform->position.v[2]},
+        .rotation = {transform->rotation.v[0], transform->rotation.v[1], transform->rotation.v[2]},
+        .scale = {transform->scale.v[0], transform->scale.v[1], transform->scale.v[2]},
+    });
     return 0;
 }
 

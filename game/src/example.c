@@ -110,7 +110,7 @@ int init_example(void) {
     ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
     ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
     create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
-    load_png_texture("textures/cat.png", &example_texture);
+    load_png_texture("textures/test.png", &example_texture);
     Transform transform1 = {
                 .position = {0, 0, 0},
                 .rotation = {1, 2, 3},

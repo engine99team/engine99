@@ -5,11 +5,11 @@
 
 typedef struct Transform {
     // Position vector
-    mfloat_t position[VEC3_SIZE];
+    struct vec3 position;
     // Scale in local coordinates
-    mfloat_t scale[VEC3_SIZE];
-    // Rotation in radians
-    mfloat_t rotation[VEC3_SIZE];
+    struct vec3 scale;
+    // Rotation quaternion
+    struct quat rotation;
 } Transform;
 
 ECS_COMPONENT_EXTERN(Transform);

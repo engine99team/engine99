@@ -5,6 +5,6 @@
 #define CONFIG_WINDOW_TITLE "Hello world"
 #define CONFIG_WINDOW_WIDTH 1280
 #define CONFIG_WINDOW_HEIGHT 720
-
+#define CONFIG_FPS 60
 
 #endif //ENGINE99_CONFIG_H
