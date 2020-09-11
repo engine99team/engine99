@@ -86,8 +86,8 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
     glDeleteShader(frag_shader);
     glUseProgram(local_shader_program);
     glUniform1i(glGetUniformLocation(local_shader_program, "ourTexture"), 0);
-    ECS_ENTITY(world, shader_program_entity, ShaderProgram);
-    ecs_set(world, shader_program_entity, ShaderProgram, {local_shader_program});
+    ECS_ENTITY(world, shaderProgramEntity, ShaderProgram);
+    ecs_set(world, shaderProgramEntity, ShaderProgram, {local_shader_program});
     return 0;
 }
 
@@ -176,8 +176,8 @@ int load_png_texture(const char* filepath, GLuint* texture) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    ECS_ENTITY(world, texture_entity, Texture);
-    ecs_set(world, texture_entity, Texture, {local_texture});
+    ECS_ENTITY(world, textureEntity, Texture);
+    ecs_set(world, textureEntity, Texture, {local_texture});
     *texture = local_texture;
     free(data);
     return 0;

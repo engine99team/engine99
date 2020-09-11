@@ -1,6 +1,13 @@
 #ifndef ENGINE99_GRAPHICS_COMPONENTS_H
 #define ENGINE99_GRAPHICS_COMPONENTS_H
-#include "graphics_components_structs.h"
+#include "graphics.h"
+
+typedef struct Texture {
+    GLuint id;
+} Texture;
+typedef struct ShaderProgram {
+    GLuint id;
+} ShaderProgram;
 
 ECS_COMPONENT_EXTERN(Texture);
 ECS_COMPONENT_EXTERN(ShaderProgram);

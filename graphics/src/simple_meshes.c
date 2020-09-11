@@ -44,7 +44,7 @@ void delete_rectangle(ecs_iter_t* it) {
     glDeleteBuffers(1, &mesh->EBO);
 }
 
-int create_triangle(GLuint shader_program, GLuint texture) {
+int create_triangle(GLuint shader_program, GLuint texture, const Transform* transform) {
     GLuint VBO, VAO;
     float triangle_vertices[] = {
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -75,7 +75,7 @@ int create_triangle(GLuint shader_program, GLuint texture) {
     return 0;
 }
 
-int create_rectangle(GLuint shader_program, GLuint texture) {
+int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform) {
     GLuint VBO, VAO, EBO;
     // Rectangle
     float rect_vertices[] = {

@@ -1,4 +1,4 @@
-#include "core_components_structures.h"
+#include "core_components.h"
 #include "globals.h"
 
 ECS_COMPONENT_DECLARE(Transform);

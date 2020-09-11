@@ -1,5 +1,5 @@
 #include <flecs.h>
-#include "graphics_components_structs.h"
+#include "graphics_components.h"
 
 ECS_DECLARE_COMPONENT(Texture);
 ECS_DECLARE_COMPONENT(ShaderProgram);

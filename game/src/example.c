@@ -4,6 +4,7 @@
 #include "stages.h"
 #include "graphics.h"
 #include "simple_meshes.h"
+#include "core_components.h"
 #include <log.h>
 
 void example_imgui (ecs_iter_t* it) {
@@ -110,8 +111,18 @@ int init_example(void) {
     ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
     create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
     load_png_texture("textures/cat.png", &example_texture);
-    create_rectangle(shader_program, example_texture);
-    create_triangle(shader_program, example_texture);
+    Transform transform1 = {
+                .position = {0, 0, 0},
+                .rotation = {1, 2, 3},
+                .scale = {1, 1, 1}
+            },
+            transform2 = {
+                .position = {0, -0.5, 0},
+                .rotation = {1, 4, 3},
+                .scale = {1, 2, 1}
+    };
+    create_rectangle(shader_program, example_texture, &transform1);
+    create_triangle(shader_program, example_texture, &transform2);
     return 0;
 }
 

@@ -1,5 +1,6 @@
 #ifndef ENGINE99_SIMPLE_MESHES_H
 #define ENGINE99_SIMPLE_MESHES_H
+#include "core_components.h"
 #include <flecs.h>
 #include <graphics.h>
 #include <mathc.h>
@@ -15,8 +16,8 @@ typedef struct RectangleMesh {
 } RectangleMesh;
 
 int init_simple_meshes(void);
-int create_rectangle(GLuint shader_program, GLuint texture);
-int create_triangle(GLuint shader_program, GLuint texture);
+int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform);
+int create_triangle(GLuint shader_program, GLuint texture, const Transform* transform);
 
 
 
