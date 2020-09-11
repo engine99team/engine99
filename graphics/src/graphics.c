@@ -79,6 +79,9 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
         char info_log[512];
         glGetProgramInfoLog(local_shader_program, 512, NULL, info_log);
         log_error("Failed to link shaders to shader program. %s", info_log);
+        glDeleteProgram(local_shader_program);
+        glDeleteShader(vert_shader);
+        glDeleteShader(frag_shader);
         return -1;
     }
     *shader_program = local_shader_program;
@@ -104,11 +107,13 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     png_file = fopen(filepath, "rb");
     if  (png_file == NULL) {
         log_error("Can't open png file: %s", filepath);
+        spng_ctx_free(png_ctx);
         return -1;
     }
     res = spng_set_png_file(png_ctx, png_file);
     if (res != 0) {
         log_error("Error while loading png file: %s", spng_strerror(res));
+        spng_ctx_free(png_ctx);
         fclose(png_file);
         return -1;
     }
@@ -116,6 +121,7 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     res = spng_get_ihdr(png_ctx, &ihdr);
     if (res != 0) {
         log_error("Error while getting size of png file: %s", spng_strerror(res));
+        spng_ctx_free(png_ctx);
         fclose(png_file);
         return -1;
     }
@@ -124,19 +130,24 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     *width =  ihdr.width;
     if (res != 0) {
         log_error("Error while getting size of png file: %s", spng_strerror(res));
+        spng_ctx_free(png_ctx);
         fclose(png_file);
         return -1;
     }
     out_data = (unsigned char *)malloc(*width * *height * 4);
     if (out_data == NULL) {
-        fclose(png_file);
         log_error("Can't allocate memory for png buffer");
+        spng_ctx_free(png_ctx);
+        fclose(png_file);
         return -1;
     }
     res = spng_decode_image(png_ctx, NULL, 0, SPNG_FMT_RGBA8, SPNG_DECODE_PROGRESSIVE);
-    if(res)
+    if(res != 0)
     {
         log_error("progressive spng_decode_image() error: %s", spng_strerror(res));
+        spng_ctx_free(png_ctx);
+        free(out_data);
+        fclose(png_file);
         return -1;
     }
     out_width = out_size / ihdr.height;
@@ -150,7 +161,11 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
 
     if(res != SPNG_EOI)
     {
-        printf("progressive decode error: %s\n", spng_strerror(res));
+        log_error("progressive decode error: %s\n", spng_strerror(res));
+        spng_ctx_free(png_ctx);
+        free(out_data);
+        fclose(png_file);
+        return -1;
     }
     spng_ctx_free(png_ctx);
     *data = out_data;

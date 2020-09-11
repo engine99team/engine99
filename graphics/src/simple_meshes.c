@@ -1,16 +1,32 @@
 #include "simple_meshes.h"
 #include "globals.h"
 #include "stages.h"
-#include <log.h>
 
 ECS_COMPONENT_DECLARE(TriangleMesh);
 ECS_COMPONENT_DECLARE(RectangleMesh);
-GLuint triangle_mesh = 0, rectangle_mesh = 0;
+
+int create_transform_matrix(Transform* transform, struct mat4* result) {
+    struct mat4 matrix, rot_matrix, proj_matrix;
+    mat4_identity(matrix.v);
+    mat4_rotation_quat(rot_matrix.v, transform->rotation.v);
+    mat4_scale(matrix.v, matrix.v, transform->scale.v);
+    mat4_multiply(matrix.v, rot_matrix.v, matrix.v);
+
+    //mat4_translate(matrix.v, matrix.v, transform->position.v);
+    mat4_perspective(proj_matrix.v, to_radians(60), 1.0, 0.1, 100.0);
+    //mat4_multiply(matrix.v, proj_matrix.v, matrix.v);
+    mat4_assign(result->v, matrix.v);
+    return 0;
+}
 
 void render_rectangle(ecs_iter_t* it) {
+    struct mat4 transform_matrix;
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
+    Transform* transform = ecs_column(it, Transform, 2);
+    create_transform_matrix(transform, &transform_matrix);
     glUseProgram(mesh->shader_program);
     glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color.x, mesh->color.y, mesh->color.z, mesh->color.w);
+    glUniformMatrix4fv(glGetUniformLocation(mesh->shader_program, "transform"), 1, GL_FALSE, transform_matrix.v);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mesh->texture);
     glEnable(GL_BLEND);
@@ -131,7 +147,7 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
 int init_simple_meshes(void) {
     ECS_COMPONENT_DEFINE(world, TriangleMesh);
     ECS_COMPONENT_DEFINE(world, RectangleMesh);
-    ECS_SYSTEM(world, render_rectangle, render_stage, RectangleMesh);
+    ECS_SYSTEM(world, render_rectangle, render_stage, RectangleMesh, Transform);
     ECS_TRIGGER(world, delete_rectangle, EcsOnRemove, RectangleMesh);
     ECS_SYSTEM(world, render_triangle, render_stage, TriangleMesh);
     ECS_TRIGGER(world, delete_triangle, EcsOnRemove, TriangleMesh);
