@@ -44,4 +44,4 @@ add_library(GameModules ${GAME_SRC})
 add_executable(engine99 main.c)
 target_link_libraries(engine99 GameModules ${MODULES} ThirdPartyLibs
         ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES}
-        ${ZLIB_LIBRARIES} m ${apple_flags})
+        ${ZLIB_LIBRARIES} m ${apple_flags} cglm)

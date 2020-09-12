@@ -198,3 +198,15 @@ int load_png_texture(const char* filepath, GLuint* texture) {
     return 0;
 }
 
+int create_transform_matrix(Transform* transform, mat4* result) {
+    mat4 matrix, rot_matrix, proj_matrix;
+    glm_mat4_identity(matrix);
+    glm_scale(matrix, transform->scale);
+    glm_euler(transform->rotation, rot_matrix);
+    glm_mat4_mul(rot_matrix, matrix, matrix);
+    glm_translate(matrix, transform->position);
+    glm_perspective_default((float)CONFIG_WINDOW_WIDTH / CONFIG_WINDOW_HEIGHT, proj_matrix);
+    glm_mat4_mul(proj_matrix, matrix, matrix);
+    glm_mat4_copy(matrix, *result);
+    return 0;
+}

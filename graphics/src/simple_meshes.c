@@ -5,28 +5,14 @@
 ECS_COMPONENT_DECLARE(TriangleMesh);
 ECS_COMPONENT_DECLARE(RectangleMesh);
 
-int create_transform_matrix(Transform* transform, struct mat4* result) {
-    struct mat4 matrix, rot_matrix, proj_matrix;
-    mat4_identity(matrix.v);
-    mat4_rotation_quat(rot_matrix.v, transform->rotation.v);
-    mat4_scale(matrix.v, matrix.v, transform->scale.v);
-    mat4_multiply(matrix.v, rot_matrix.v, matrix.v);
-
-    //mat4_translate(matrix.v, matrix.v, transform->position.v);
-    mat4_perspective(proj_matrix.v, to_radians(60), 1.0, 0.1, 100.0);
-    //mat4_multiply(matrix.v, proj_matrix.v, matrix.v);
-    mat4_assign(result->v, matrix.v);
-    return 0;
-}
-
 void render_rectangle(ecs_iter_t* it) {
-    struct mat4 transform_matrix;
+    mat4 transform_matrix;
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
     Transform* transform = ecs_column(it, Transform, 2);
     create_transform_matrix(transform, &transform_matrix);
     glUseProgram(mesh->shader_program);
-    glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color.x, mesh->color.y, mesh->color.z, mesh->color.w);
-    glUniformMatrix4fv(glGetUniformLocation(mesh->shader_program, "transform"), 1, GL_FALSE, transform_matrix.v);
+    glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color[0], mesh->color[1], mesh->color[2], mesh->color[3]);
+    glUniformMatrix4fv(glGetUniformLocation(mesh->shader_program, "transform"), 1, GL_FALSE, (GLfloat*)transform_matrix);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mesh->texture);
     glEnable(GL_BLEND);
@@ -38,7 +24,7 @@ void render_rectangle(ecs_iter_t* it) {
 void render_triangle(ecs_iter_t* it) {
     TriangleMesh* mesh = ecs_column(it, TriangleMesh, 1);
     glUseProgram(mesh->shader_program);
-    glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color.x, mesh->color.y, mesh->color.z, mesh->color.w);
+    glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color[0], mesh->color[1], mesh->color[2], mesh->color[3]);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mesh->texture);
     glEnable(GL_BLEND);
@@ -83,15 +69,15 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     ECS_ENTITY(world, triangleEntity, TriangleMesh, Transform);
-    ecs_set(world, triangleEntity, TriangleMesh, {.color = {0.0f, 0.0f, 0.0f, 1.0f},
+    ecs_set(world, triangleEntity, TriangleMesh, {.color = {1.0f, 1.0f, 1.0f, 0.5f},
         .shader_program = shader_program,
         .VBO = VBO,
         .VAO = VAO,
         .texture = texture});
     ecs_set(world, triangleEntity, Transform, {
-        .position = {transform->position.v[0], transform->position.v[1], transform->position.v[2]},
-        .rotation = {transform->rotation.v[0], transform->rotation.v[1], transform->rotation.v[2]},
-        .scale = {transform->scale.v[0], transform->scale.v[1], transform->scale.v[2]},
+        .position = {transform->position[0], transform->position[1], transform->position[2]},
+        .rotation = {transform->rotation[0], transform->rotation[1], transform->rotation[2]},
+        .scale = {transform->scale[0], transform->scale[1], transform->scale[2]},
     });
     return 0;
 }
@@ -130,16 +116,16 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     ECS_ENTITY(world, rectangleEntity, RectangleMesh, Transform);
-    ecs_set(world, rectangleEntity, RectangleMesh, {.color = {0.0f, 0.0f, 0.0f, 1.0f},
+    ecs_set(world, rectangleEntity, RectangleMesh, {.color = {1.0f, 1.0f, 1.0f, 1.0f},
                                                     .shader_program = shader_program,
                                                     .VBO = VBO,
                                                     .VAO = VAO,
                                                     .EBO = EBO,
                                                     .texture = texture});
     ecs_set(world, rectangleEntity, Transform, {
-        .position = {transform->position.v[0], transform->position.v[1], transform->position.v[2]},
-        .rotation = {transform->rotation.v[0], transform->rotation.v[1], transform->rotation.v[2]},
-        .scale = {transform->scale.v[0], transform->scale.v[1], transform->scale.v[2]},
+        .position = {transform->position[0], transform->position[1], transform->position[2]},
+        .rotation = {transform->rotation[0], transform->rotation[1], transform->rotation[2]},
+        .scale = {transform->scale[0], transform->scale[1], transform->scale[2]},
     });
     return 0;
 }

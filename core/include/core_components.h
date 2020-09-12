@@ -1,15 +1,15 @@
 #ifndef ENGINE99_CORE_COMPONENTS_H
 #define ENGINE99_CORE_COMPONENTS_H
 #include <flecs.h>
-#include <mathc.h>
+#include <cglm/cglm.h>
 
 typedef struct Transform {
     // Position vector
-    struct vec3 position;
+    vec3 position;
     // Scale in local coordinates
-    struct vec3 scale;
-    // Rotation quaternion
-    struct quat rotation;
+    vec3 scale;
+    // Rotation euler angles (in radians)
+    vec3 rotation;
 } Transform;
 
 ECS_COMPONENT_EXTERN(Transform);

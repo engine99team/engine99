@@ -105,25 +105,20 @@ void example_imgui_fps(ecs_iter_t* it) {
 
 int init_example(void) {
     GLuint example_texture, shader_program;
-    struct quat rot, rot2;
-    struct vec3 up = {0, 1, 0},
-                right = {1, 0, 0};
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
     ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
     create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
     load_png_texture("textures/test.png", &example_texture);
-    quat_from_axis_angle(rot.v, up.v, 20);
-    quat_from_axis_angle(rot2.v, right.v, 10);
     Transform transform1 = {
-                .position = {0, -3, -5},
-                .rotation = rot2,
+                .position = {0, 0.5f, -2.f},
+                .rotation = {-CGLM_PI_4, 0, 0},
                 .scale = {1, 2, 1}
             },
             transform2 = {
-                .position = {0, -0.5, 0},
-                .rotation = rot2,
+                .position = {0, -0.5f, 0},
+                .rotation = {M_PI_4, 0, 0},
                 .scale = {1, 1, 1}
     };
     create_rectangle(shader_program, example_texture, &transform1);

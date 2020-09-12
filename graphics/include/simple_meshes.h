@@ -3,15 +3,16 @@
 #include "core_components.h"
 #include <flecs.h>
 #include <graphics.h>
-#include <mathc.h>
+#include <cglm/cglm.h>
+#include <cglm/quat.h>
 
 typedef struct TriangleMesh {
-    struct vec4 color;
+    vec4 color;
     GLuint shader_program, VBO, VAO, texture;
 } TriangleMesh;
 
 typedef struct RectangleMesh {
-    struct vec4 color;
+    vec4 color;
     GLuint shader_program, VBO, VAO, EBO, texture;
 } RectangleMesh;
 
