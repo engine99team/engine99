@@ -10,6 +10,7 @@ install:
   - cmake ..
   - make
   - sudo make install
+  - cd ../..
 jobs:
   include:
     - stage: linux build
