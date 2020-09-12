@@ -12,6 +12,14 @@ int create_window() {
         return 1;
     }
 
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
     window = SDL_CreateWindow(CONFIG_WINDOW_TITLE, 0, 0,
                               CONFIG_WINDOW_WIDTH, CONFIG_WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
 
@@ -19,7 +27,6 @@ int create_window() {
         log_error("Failed to create window");
         return 1;
     }
-
     gl_context = SDL_GL_CreateContext(window);
 #ifndef __APPLE__
     if (glewInit() != GLEW_OK) {
@@ -40,12 +47,14 @@ int destroy_window() {
 
 void pre_render_window_system (ecs_iter_t* it) {
     SDL_GetWindowSize(window, &window_width, &window_height);
+    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, window_width, window_height);
     glClearColor(bg.r, bg.g, bg.b, bg.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void post_render_window_system (ecs_iter_t* it) {
     nk_sdl_render(NK_ANTI_ALIASING_ON, 512 * 1024, 128 * 1024);
+    glEnable(GL_DEPTH_TEST);
     SDL_GL_SwapWindow(window);
 }

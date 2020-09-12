@@ -16,10 +16,18 @@ typedef struct RectangleMesh {
     GLuint shader_program, VBO, VAO, EBO, texture;
 } RectangleMesh;
 
+typedef struct CubeMesh {
+    vec4 color;
+    GLuint shader_program, VBO, VAO, texture;
+} CubeMesh;
+
+ECS_COMPONENT_EXTERN(TriangleMesh);
+ECS_COMPONENT_EXTERN(RectangleMesh);
+ECS_COMPONENT_EXTERN(CubeMesh);
+
 int init_simple_meshes(void);
 int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform);
 int create_triangle(GLuint shader_program, GLuint texture, const Transform* transform);
-
-
+int create_cube(GLuint shader_program, GLuint texture, const Transform* transform);
 
 #endif //ENGINE99_SIMPLE_MESHES_H
