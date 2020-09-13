@@ -96,7 +96,8 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     ECS_ENTITY(world, triangleEntity, TriangleMesh, Transform);
-    ecs_set(world, triangleEntity, TriangleMesh, {.color = {1.0f, 1.0f, 1.0f, 0.5f},
+    ecs_set(world, triangleEntity, TriangleMesh, {
+        .color = {1.0f, 1.0f, 1.0f, 0.5f},
         .shader_program = shader_program,
         .VBO = VBO,
         .VAO = VAO,
@@ -218,7 +219,8 @@ int create_cube(GLuint shader_program, GLuint texture, const Transform* transfor
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     ECS_ENTITY(world, cubeEntity, CubeMesh, Transform);
-    ecs_set(world, cubeEntity, CubeMesh, {.color = {1.0f, 1.0f, 1.0f, 1.f},
+    ecs_set(world, cubeEntity, CubeMesh, {
+        .color = {1.0f, 1.0f, 1.0f, 1.f},
         .shader_program = shader_program,
         .VBO = VBO,
         .VAO = VAO,

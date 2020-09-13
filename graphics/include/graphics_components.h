@@ -5,12 +5,20 @@
 typedef struct Texture {
     GLuint id;
 } Texture;
+
 typedef struct ShaderProgram {
     GLuint id;
 } ShaderProgram;
 
+typedef struct Camera {
+    float fov;
+    float near;
+    float far;
+} Camera;
+
 ECS_COMPONENT_EXTERN(Texture);
 ECS_COMPONENT_EXTERN(ShaderProgram);
+ECS_COMPONENT_EXTERN(Camera);
 
 int init_graphics_components(void);
 

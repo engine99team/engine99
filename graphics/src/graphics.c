@@ -199,12 +199,27 @@ int load_png_texture(const char* filepath, GLuint* texture) {
 }
 
 int create_transform_matrix(Transform* transform, mat4* result) {
-    mat4 matrix, rot_matrix, move_matrix, scale_matrix, proj_matrix;
+    mat4 matrix, rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix;
+    Camera* cam;
+    Transform* camTrans;
+    ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
+    ecs_iter_t it = ecs_query_iter(query);
+    while (ecs_query_next(&it)) {
+        cam = ecs_column(&it, Camera, 1);
+        camTrans = ecs_column(&it, Transform, 2);
+    }
     glm_scale_make(scale_matrix, transform->scale);
     glm_euler(transform->rotation, rot_matrix);
     glm_translate_make(move_matrix, transform->position);
-    glm_perspective_default((float)CONFIG_WINDOW_WIDTH/CONFIG_WINDOW_HEIGHT, proj_matrix);
-    glm_mat4_mulN((mat4 *[]){&proj_matrix, &move_matrix, &rot_matrix, &scale_matrix}, 4, matrix);
+    glm_perspective(cam->fov,
+                    (float)CONFIG_WINDOW_WIDTH/CONFIG_WINDOW_HEIGHT,
+                    cam->near,
+                    cam->far,
+                    proj_matrix);
+    vec3 camDirection = {0, 0 ,-1.f};
+    vec3 camUp = {0, 1.f, 0};
+    glm_look(camTrans->position, camDirection, camUp, lookat_matrix);
+    glm_mat4_mulN((mat4 *[]){&proj_matrix, &lookat_matrix, &move_matrix, &rot_matrix, &scale_matrix}, 5, matrix);
     glm_mat4_copy(matrix, *result);
     return 0;
 }
