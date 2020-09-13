@@ -8,46 +8,65 @@
 #include "graphics_components.h"
 #include <log.h>
 
+float axis_ws = 0, axis_ad = 0;
+float a = 0, w = 0, s = 0, d = 0;
+
 int example_events (SDL_Event* event, float delta_time) {
     if (event->type == SDL_KEYDOWN) {
-        Transform* camTrans;
-        mat4 cam_rot;
-        vec3 cam_front, cam_right;
-        vec3 negZ = {0, 0, -1.f};
-        vec3 x = {1.f, 0, 0};
-        ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
-        ecs_iter_t it = ecs_query_iter(query);
-        while (ecs_query_next(&it)) {
-            camTrans = ecs_column(&it, Transform, 2);
-        }
-        glm_euler(camTrans->rotation, cam_rot);
-        glm_mat4_mulv3(cam_rot, negZ, 0, cam_front);
-        glm_mat4_mulv3(cam_rot, x, 0, cam_right);
-        vec3 delta = {0, 0, 0};
         switch (event->key.keysym.sym) {
             case SDLK_a:
-                glm_vec3_scale(cam_right, -delta_time, cam_right);
-                glm_vec3_add(delta, cam_right, delta);
+                a = 1;
                 break;
             case SDLK_d:
-                glm_vec3_scale(cam_right, delta_time, cam_right);
-                glm_vec3_add(delta, cam_right, delta);
+                d = 1;
                 break;
             case SDLK_w:
-                glm_vec3_scale(cam_front, delta_time, cam_right);
-                glm_vec3_add(delta, cam_right, delta);
+                w = 1;
                 break;
             case SDLK_s:
-                glm_vec3_scale(cam_front, -delta_time, cam_right);
-                glm_vec3_add(delta, cam_right, delta);
+                s = 1;
                 break;
-
         }
-        glm_vec3_add(camTrans->position, delta, camTrans->position);
-
+    } else {
+        switch (event->key.keysym.sym) {
+            case SDLK_a:
+                a = 0;
+                break;
+            case SDLK_d:
+                d = 0;
+                break;
+            case SDLK_w:
+                w = 0;
+                break;
+            case SDLK_s:
+                s = 0;
+                break;
+        }
     }
-
+    axis_ws = (float)w - (float)s;
+    axis_ad = (float)d - (float)a;
     return 0;
+}
+
+void camera_movement(ecs_iter_t* it) {
+    Transform* camTrans;
+    mat4 cam_rot;
+    vec3 cam_front, cam_right;
+    vec3 negZ = {0, 0, -1.f};
+    vec3 x = {1.f, 0, 0};
+    camTrans = ecs_column(it, Transform, 2);
+
+    glm_euler(camTrans->rotation, cam_rot);
+    glm_mat4_mulv3(cam_rot, negZ, 0, cam_front);
+    glm_mat4_mulv3(cam_rot, x, 0, cam_right);
+    vec3 delta = {0, 0, 0};
+    float delta_time = 2 * it->delta_time;
+
+    glm_vec3_scale(cam_right, delta_time * axis_ad, cam_right);
+    glm_vec3_scale(cam_front, delta_time * axis_ws, cam_front);
+    glm_vec3_add(delta, cam_right, delta);
+    glm_vec3_add(delta, cam_front, delta);
+    glm_vec3_add(camTrans->position, delta, camTrans->position);
 }
 
 void example_imgui (ecs_iter_t* it) {
@@ -177,6 +196,7 @@ int init_example(void) {
     ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
     ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
     ECS_SYSTEM(world, example_imgui_cube, imgui_stage, CubeMesh)
+    ECS_SYSTEM(world, camera_movement, update_stage, Camera, Transform)
     create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
     load_png_texture("textures/cat.png", &example_texture);
     Transform transform1 = {
