@@ -8,7 +8,8 @@ int init_game (void) {
     return 0;
 }
 
-int game_event (SDL_Event* event) {
+int game_event (SDL_Event* event, float delta_time) {
+    example_events(event, delta_time);
     return 0;
 }
 

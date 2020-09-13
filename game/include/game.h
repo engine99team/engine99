@@ -5,7 +5,7 @@
 int init_game (void);
 
 //Game events
-int game_event (SDL_Event* event);
+int game_event (SDL_Event* event, float delta_time);
 
 //Finish game and clear memory
 int destroy_game (void);

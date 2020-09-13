@@ -5,7 +5,50 @@
 #include "graphics.h"
 #include "simple_meshes.h"
 #include "core_components.h"
+#include "graphics_components.h"
 #include <log.h>
+
+int example_events (SDL_Event* event, float delta_time) {
+    if (event->type == SDL_KEYDOWN) {
+        Transform* camTrans;
+        mat4 cam_rot;
+        vec3 cam_front, cam_right;
+        vec3 negZ = {0, 0, -1.f};
+        vec3 x = {1.f, 0, 0};
+        ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
+        ecs_iter_t it = ecs_query_iter(query);
+        while (ecs_query_next(&it)) {
+            camTrans = ecs_column(&it, Transform, 2);
+        }
+        glm_euler(camTrans->rotation, cam_rot);
+        glm_mat4_mulv3(cam_rot, negZ, 0, cam_front);
+        glm_mat4_mulv3(cam_rot, x, 0, cam_right);
+        vec3 delta = {0, 0, 0};
+        switch (event->key.keysym.sym) {
+            case SDLK_a:
+                glm_vec3_scale(cam_right, -delta_time, cam_right);
+                glm_vec3_add(delta, cam_right, delta);
+                break;
+            case SDLK_d:
+                glm_vec3_scale(cam_right, delta_time, cam_right);
+                glm_vec3_add(delta, cam_right, delta);
+                break;
+            case SDLK_w:
+                glm_vec3_scale(cam_front, delta_time, cam_right);
+                glm_vec3_add(delta, cam_right, delta);
+                break;
+            case SDLK_s:
+                glm_vec3_scale(cam_front, -delta_time, cam_right);
+                glm_vec3_add(delta, cam_right, delta);
+                break;
+
+        }
+        glm_vec3_add(camTrans->position, delta, camTrans->position);
+
+    }
+
+    return 0;
+}
 
 void example_imgui (ecs_iter_t* it) {
     if (nk_begin(nk_ctx, "Demo", nk_rect(50, 50, 230, 250),
