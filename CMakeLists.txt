@@ -9,12 +9,15 @@ find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(ZLIB REQUIRED)
-set(apple_flags "")
+set(platform_flags "")
 if(APPLE)
-    set(apple_flags "-framework OpenGL")
+    set(platform_flags "-framework OpenGL -ldl -lpthread")
     include_directories("/usr/local/include")
     # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
     LINK_DIRECTORIES(/usr/local/lib)
+elseif(UNIX)
+    set(_GNU_SOURCE 1)
+    set(platform_flags "-ldl -lpthread")
 endif()
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${GAME_DIR}/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
@@ -44,4 +47,4 @@ add_library(GameModules ${GAME_SRC})
 add_executable(engine99 main.c)
 target_link_libraries(engine99 GameModules ${MODULES} ThirdPartyLibs
         ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES}
-        ${ZLIB_LIBRARIES} m ${apple_flags} cglm)
+        ${ZLIB_LIBRARIES} m ${platform_flags} cglm)

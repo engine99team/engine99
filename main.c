@@ -2,6 +2,7 @@
 
 #include <log.h>
 #include <flecs.h>
+#include <flecs_meta.h>
 #include <nuklear_include.h>
 #include <graphics_components.h>
 
@@ -21,6 +22,7 @@ int main() {
         log_fatal("Can't init flecs world");
         return -1;
     }
+    ECS_IMPORT(world, FlecsMeta);
     res = create_window();
     if (res != 0) {
         log_fatal("Can't create SDL window");
