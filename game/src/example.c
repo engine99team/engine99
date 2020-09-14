@@ -108,74 +108,87 @@ void example_imgui (ecs_iter_t* it) {
 
 void example_imgui_rect (ecs_iter_t* it) {
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
-    struct nk_colorf* rectangle_color = (struct nk_colorf*)&mesh->color;
-    if (nk_begin(nk_ctx, "Demo Rect", nk_rect(50, 300, 230, 250),
-                 NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
-                 NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
-    {
-        nk_layout_row_dynamic(nk_ctx, 20, 1);
-        nk_label(nk_ctx, "rectangle:", NK_TEXT_LEFT);
-        nk_layout_row_dynamic(nk_ctx, 25, 1);
-        if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(*rectangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
-            nk_layout_row_dynamic(nk_ctx, 120, 1);
-            *rectangle_color = nk_color_picker(nk_ctx, *rectangle_color, NK_RGBA);
+    int i;
+    for (i = 0; i < it->count; i++, mesh++) {
+        struct nk_colorf* rectangle_color = (struct nk_colorf*)&mesh->color;
+        char window_title[30];
+        sprintf(window_title, "Demo Rect %d", i);
+        if (nk_begin(nk_ctx, window_title, nk_rect(50, 300, 230, 250),
+                     NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
+                     NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
+        {
+            nk_layout_row_dynamic(nk_ctx, 20, 1);
+            nk_label(nk_ctx, "rectangle:", NK_TEXT_LEFT);
             nk_layout_row_dynamic(nk_ctx, 25, 1);
-            rectangle_color->r = nk_propertyf(nk_ctx, "#R:", 0, rectangle_color->r, 1.0f, 0.01f,0.005f);
-            rectangle_color->g = nk_propertyf(nk_ctx, "#G:", 0, rectangle_color->g, 1.0f, 0.01f,0.005f);
-            rectangle_color->b = nk_propertyf(nk_ctx, "#B:", 0, rectangle_color->b, 1.0f, 0.01f,0.005f);
-            rectangle_color->a = nk_propertyf(nk_ctx, "#A:", 0, rectangle_color->a, 1.0f, 0.01f,0.005f);
-            nk_combo_end(nk_ctx);
+            if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(*rectangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
+                nk_layout_row_dynamic(nk_ctx, 120, 1);
+                *rectangle_color = nk_color_picker(nk_ctx, *rectangle_color, NK_RGBA);
+                nk_layout_row_dynamic(nk_ctx, 25, 1);
+                rectangle_color->r = nk_propertyf(nk_ctx, "#R:", 0, rectangle_color->r, 1.0f, 0.01f,0.005f);
+                rectangle_color->g = nk_propertyf(nk_ctx, "#G:", 0, rectangle_color->g, 1.0f, 0.01f,0.005f);
+                rectangle_color->b = nk_propertyf(nk_ctx, "#B:", 0, rectangle_color->b, 1.0f, 0.01f,0.005f);
+                rectangle_color->a = nk_propertyf(nk_ctx, "#A:", 0, rectangle_color->a, 1.0f, 0.01f,0.005f);
+                nk_combo_end(nk_ctx);
+            }
         }
+        nk_end(nk_ctx);
     }
-    nk_end(nk_ctx);
 }
 
 void example_imgui_cube (ecs_iter_t* it) {
     CubeMesh* mesh = ecs_column(it, CubeMesh, 1);
-    struct nk_colorf* rectangle_color = (struct nk_colorf*)&mesh->color;
-    if (nk_begin(nk_ctx, "Demo Rect", nk_rect(50, 300, 230, 250),
-                 NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
-                 NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
-    {
-        nk_layout_row_dynamic(nk_ctx, 20, 1);
-        nk_label(nk_ctx, "rectangle:", NK_TEXT_LEFT);
-        nk_layout_row_dynamic(nk_ctx, 25, 1);
-        if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(*rectangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
-            nk_layout_row_dynamic(nk_ctx, 120, 1);
-            *rectangle_color = nk_color_picker(nk_ctx, *rectangle_color, NK_RGBA);
+    int i;
+    for (i = 0; i < it->count; i++, mesh++) {
+        struct nk_colorf *rectangle_color = (struct nk_colorf *) &mesh->color;
+        char window_title[30];
+        sprintf(window_title, "Demo Cube %d", i);
+        if (nk_begin(nk_ctx, window_title, nk_rect(50, 300, 230, 250),
+                     NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
+                     NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
+            nk_layout_row_dynamic(nk_ctx, 20, 1);
+            nk_label(nk_ctx, "cube:", NK_TEXT_LEFT);
             nk_layout_row_dynamic(nk_ctx, 25, 1);
-            rectangle_color->r = nk_propertyf(nk_ctx, "#R:", 0, rectangle_color->r, 1.0f, 0.01f,0.005f);
-            rectangle_color->g = nk_propertyf(nk_ctx, "#G:", 0, rectangle_color->g, 1.0f, 0.01f,0.005f);
-            rectangle_color->b = nk_propertyf(nk_ctx, "#B:", 0, rectangle_color->b, 1.0f, 0.01f,0.005f);
-            rectangle_color->a = nk_propertyf(nk_ctx, "#A:", 0, rectangle_color->a, 1.0f, 0.01f,0.005f);
-            nk_combo_end(nk_ctx);
+            if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(*rectangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
+                nk_layout_row_dynamic(nk_ctx, 120, 1);
+                *rectangle_color = nk_color_picker(nk_ctx, *rectangle_color, NK_RGBA);
+                nk_layout_row_dynamic(nk_ctx, 25, 1);
+                rectangle_color->r = nk_propertyf(nk_ctx, "#R:", 0, rectangle_color->r, 1.0f, 0.01f, 0.005f);
+                rectangle_color->g = nk_propertyf(nk_ctx, "#G:", 0, rectangle_color->g, 1.0f, 0.01f, 0.005f);
+                rectangle_color->b = nk_propertyf(nk_ctx, "#B:", 0, rectangle_color->b, 1.0f, 0.01f, 0.005f);
+                rectangle_color->a = nk_propertyf(nk_ctx, "#A:", 0, rectangle_color->a, 1.0f, 0.01f, 0.005f);
+                nk_combo_end(nk_ctx);
+            }
         }
+        nk_end(nk_ctx);
     }
-    nk_end(nk_ctx);
 }
 
 void example_imgui_tri (ecs_iter_t* it) {
     TriangleMesh* mesh = ecs_column(it, TriangleMesh, 1);
-    struct nk_colorf* triangle_color = (struct nk_colorf*)&mesh->color;
-    if (nk_begin(nk_ctx, "Demo Triangle", nk_rect(280, 50, 230, 250),
-                 NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|
-                 NK_WINDOW_MINIMIZABLE|NK_WINDOW_TITLE))
-    {
-        nk_layout_row_dynamic(nk_ctx, 20, 1);
-        nk_label(nk_ctx, "triangle:", NK_TEXT_LEFT);
-        nk_layout_row_dynamic(nk_ctx, 25, 1);
-        if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(*triangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
-            nk_layout_row_dynamic(nk_ctx, 120, 1);
-            *triangle_color = nk_color_picker(nk_ctx, *triangle_color, NK_RGBA);
+    int i;
+    for (i = 0; i < it->count; i++, mesh++) {
+        struct nk_colorf *triangle_color = (struct nk_colorf *) &mesh->color;
+        char window_title[30];
+        sprintf(window_title, "Demo triangle %d", i);
+        if (nk_begin(nk_ctx, window_title, nk_rect(280, 50, 230, 250),
+                     NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE |
+                     NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE)) {
+            nk_layout_row_dynamic(nk_ctx, 20, 1);
+            nk_label(nk_ctx, "triangle:", NK_TEXT_LEFT);
             nk_layout_row_dynamic(nk_ctx, 25, 1);
-            triangle_color->r = nk_propertyf(nk_ctx, "#R:", 0, triangle_color->r, 1.0f, 0.01f,0.005f);
-            triangle_color->g = nk_propertyf(nk_ctx, "#G:", 0, triangle_color->g, 1.0f, 0.01f,0.005f);
-            triangle_color->b = nk_propertyf(nk_ctx, "#B:", 0, triangle_color->b, 1.0f, 0.01f,0.005f);
-            triangle_color->a = nk_propertyf(nk_ctx, "#A:", 0, triangle_color->a, 1.0f, 0.01f,0.005f);
-            nk_combo_end(nk_ctx);
+            if (nk_combo_begin_color(nk_ctx, nk_rgb_cf(*triangle_color), nk_vec2(nk_widget_width(nk_ctx), 400))) {
+                nk_layout_row_dynamic(nk_ctx, 120, 1);
+                *triangle_color = nk_color_picker(nk_ctx, *triangle_color, NK_RGBA);
+                nk_layout_row_dynamic(nk_ctx, 25, 1);
+                triangle_color->r = nk_propertyf(nk_ctx, "#R:", 0, triangle_color->r, 1.0f, 0.01f, 0.005f);
+                triangle_color->g = nk_propertyf(nk_ctx, "#G:", 0, triangle_color->g, 1.0f, 0.01f, 0.005f);
+                triangle_color->b = nk_propertyf(nk_ctx, "#B:", 0, triangle_color->b, 1.0f, 0.01f, 0.005f);
+                triangle_color->a = nk_propertyf(nk_ctx, "#A:", 0, triangle_color->a, 1.0f, 0.01f, 0.005f);
+                nk_combo_end(nk_ctx);
+            }
         }
+        nk_end(nk_ctx);
     }
-    nk_end(nk_ctx);
 }
 
 void example_imgui_fps(ecs_iter_t* it) {
