@@ -6,6 +6,8 @@ ECS_COMPONENT_DECLARE(TriangleMesh);
 ECS_COMPONENT_DECLARE(RectangleMesh);
 ECS_COMPONENT_DECLARE(CubeMesh);
 
+ECS_TYPE_DECLARE(CubeType);
+
 void render_rectangle(ecs_iter_t* it) {
     mat4 transform_matrix;
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
@@ -218,7 +220,8 @@ int create_cube(GLuint shader_program, GLuint texture, const Transform* transfor
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    ECS_ENTITY(world, cubeEntity, CubeMesh, Transform);
+    ecs_entity_t cubeEntity = ecs_new(world, CubeType);
+    printf("CubeType: %lu, CubeEntity: %lu\n", CubeType, cubeEntity);
     ecs_set(world, cubeEntity, CubeMesh, {
         .color = {1.0f, 1.0f, 1.0f, 1.f},
         .shader_program = shader_program,
@@ -236,6 +239,7 @@ int init_simple_meshes(void) {
     ECS_COMPONENT_DEFINE(world, TriangleMesh);
     ECS_COMPONENT_DEFINE(world, RectangleMesh);
     ECS_COMPONENT_DEFINE(world, CubeMesh);
+    ECS_TYPE_DEFINE(world, CubeType, CubeMesh, Transform);
     ECS_SYSTEM(world, render_rectangle, render_stage, RectangleMesh, Transform);
     ECS_TRIGGER(world, delete_rectangle, EcsOnRemove, RectangleMesh);
     ECS_SYSTEM(world, render_triangle, render_stage, TriangleMesh, Transform);

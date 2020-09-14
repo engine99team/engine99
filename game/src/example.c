@@ -62,10 +62,12 @@ void camera_movement(ecs_iter_t* it) {
     vec3 delta = {0, 0, 0};
     float delta_time = 2 * it->delta_time;
 
-    glm_vec3_scale(cam_right, delta_time * axis_ad, cam_right);
-    glm_vec3_scale(cam_front, delta_time * axis_ws, cam_front);
+    glm_vec3_scale(cam_right, axis_ad, cam_right);
+    glm_vec3_scale(cam_front, axis_ws, cam_front);
     glm_vec3_add(delta, cam_right, delta);
     glm_vec3_add(delta, cam_front, delta);
+    glm_vec3_normalize(delta);
+    glm_vec3_scale(delta, delta_time, delta);
     glm_vec3_add(camTrans->position, delta, camTrans->position);
 }
 
@@ -205,6 +207,12 @@ int init_example(void) {
                 .scale = {1, 1, 1}
             };
     create_cube(shader_program, example_texture, &transform1);
+    Transform transform2 = {
+            .position = {0, 0.1f, 0.f},
+            .rotation = {CGLM_PI / 3, -CGLM_PI / 3, 0},
+            .scale = {1, 1, 1}
+    };
+    create_cube(shader_program, example_texture, &transform2);
     return 0;
 }
 

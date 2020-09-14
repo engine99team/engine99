@@ -24,6 +24,7 @@ typedef struct CubeMesh {
 ECS_COMPONENT_EXTERN(TriangleMesh);
 ECS_COMPONENT_EXTERN(RectangleMesh);
 ECS_COMPONENT_EXTERN(CubeMesh);
+ECS_TYPE_EXTERN(CubeType);
 
 int init_simple_meshes(void);
 int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform);
