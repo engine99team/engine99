@@ -27,6 +27,7 @@ int create_window() {
         log_error("Failed to create window");
         return 1;
     }
+    SDL_SetRelativeMouseMode(SDL_TRUE);
     gl_context = SDL_GL_CreateContext(window);
 #ifndef __APPLE__
     if (glewInit() != GLEW_OK) {

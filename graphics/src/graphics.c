@@ -199,7 +199,7 @@ int load_png_texture(const char* filepath, GLuint* texture) {
 }
 
 int create_transform_matrix(Transform* transform, mat4* result) {
-    mat4 matrix, rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix;
+    mat4 matrix, rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
     Camera* cam;
     Transform* camTrans;
     ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
@@ -216,8 +216,12 @@ int create_transform_matrix(Transform* transform, mat4* result) {
                     cam->near,
                     cam->far,
                     proj_matrix);
-    vec3 camDirection = {0, 0 ,-1.f};
-    vec3 camUp = {0, 1.f, 0};
+    vec3 front = {0, 0 ,-1.f};
+    vec3 up = {0, 1.f, 0};
+    vec3 camDirection, camUp;
+    glm_euler_yxz(camTrans->rotation, cam_rot_matrix);
+    glm_mat4_mulv3(cam_rot_matrix, front, 0, camDirection);
+    glm_mat4_mulv3(cam_rot_matrix, up,0, camUp);
     glm_look(camTrans->position, camDirection, camUp, lookat_matrix);
     glm_mat4_mulN((mat4 *[]){&proj_matrix, &lookat_matrix, &move_matrix, &rot_matrix, &scale_matrix}, 5, matrix);
     glm_mat4_copy(matrix, *result);

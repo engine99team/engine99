@@ -9,7 +9,11 @@
 #include <log.h>
 
 float axis_ws = 0, axis_ad = 0;
-float a = 0, w = 0, s = 0, d = 0;
+float   a = 0,
+        w = 0,
+        s = 0,
+        d = 0;
+vec3 rot;
 
 int example_events (SDL_Event* event, float delta_time) {
     if (event->type == SDL_KEYDOWN) {
@@ -27,6 +31,9 @@ int example_events (SDL_Event* event, float delta_time) {
                 s = 1;
                 break;
         }
+    } else if (event->type == SDL_MOUSEMOTION) {
+        rot[0] = (float)event->motion.yrel;
+        rot[1] = (float)event->motion.xrel;
     } else {
         switch (event->key.keysym.sym) {
             case SDLK_a:
@@ -56,7 +63,7 @@ void camera_movement(ecs_iter_t* it) {
     vec3 x = {1.f, 0, 0};
     camTrans = ecs_column(it, Transform, 2);
 
-    glm_euler(camTrans->rotation, cam_rot);
+    glm_euler_yxz(camTrans->rotation, cam_rot);
     glm_mat4_mulv3(cam_rot, negZ, 0, cam_front);
     glm_mat4_mulv3(cam_rot, x, 0, cam_right);
     vec3 delta = {0, 0, 0};
@@ -69,6 +76,8 @@ void camera_movement(ecs_iter_t* it) {
     glm_vec3_normalize(delta);
     glm_vec3_scale(delta, delta_time, delta);
     glm_vec3_add(camTrans->position, delta, camTrans->position);
+    glm_vec3_scale(rot, -2 * CGLM_PI/180, rot);
+    glm_vec3_add(camTrans->rotation, rot, camTrans->rotation);
 }
 
 void example_imgui (ecs_iter_t* it) {
