@@ -19,6 +19,7 @@ int create_window() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
     SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 
     window = SDL_CreateWindow(CONFIG_WINDOW_TITLE, 0, 0,
                               CONFIG_WINDOW_WIDTH, CONFIG_WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
@@ -27,7 +28,7 @@ int create_window() {
         log_error("Failed to create window");
         return 1;
     }
-    SDL_SetRelativeMouseMode(SDL_TRUE);
+    glEnable(GL_MULTISAMPLE);
     gl_context = SDL_GL_CreateContext(window);
 #ifndef __APPLE__
     if (glewInit() != GLEW_OK) {

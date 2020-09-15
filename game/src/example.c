@@ -14,6 +14,7 @@ float   a = 0,
         s = 0,
         d = 0;
 vec3 rot;
+bool isRotating;
 
 int example_events (SDL_Event* event, float delta_time) {
     if (event->type == SDL_KEYDOWN) {
@@ -34,7 +35,17 @@ int example_events (SDL_Event* event, float delta_time) {
     } else if (event->type == SDL_MOUSEMOTION) {
         rot[0] = (float)event->motion.yrel;
         rot[1] = (float)event->motion.xrel;
-    } else {
+    } else if (event->type == SDL_MOUSEBUTTONDOWN) {
+        if (event->button.button == SDL_BUTTON_RIGHT) {
+            SDL_SetRelativeMouseMode(SDL_TRUE);
+            isRotating = true;
+        }
+    } else if (event->type == SDL_MOUSEBUTTONUP) {
+        if (event->button.button == SDL_BUTTON_RIGHT) {
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+            isRotating = false;
+        }
+    } else if (event->type == SDL_KEYUP) {
         switch (event->key.keysym.sym) {
             case SDLK_a:
                 a = 0;
@@ -76,8 +87,19 @@ void camera_movement(ecs_iter_t* it) {
     glm_vec3_normalize(delta);
     glm_vec3_scale(delta, delta_time, delta);
     glm_vec3_add(camTrans->position, delta, camTrans->position);
-    glm_vec3_scale(rot, -2 * CGLM_PI/180, rot);
-    glm_vec3_add(camTrans->rotation, rot, camTrans->rotation);
+    //Rotation
+    if (isRotating) {
+        glm_vec3_scale(rot, -2 * CGLM_PI/180, rot);
+        glm_vec3_add(camTrans->rotation, rot, camTrans->rotation);
+        if (camTrans->rotation[0] > CGLM_PI_2)
+            camTrans->rotation[0] = CGLM_PI_2;
+        if (camTrans->rotation[0] < -CGLM_PI_2)
+            camTrans->rotation[0] = -CGLM_PI_2;
+        if (camTrans->rotation[1] > CGLM_PI)
+            camTrans->rotation[1] = -CGLM_PI;
+        if (camTrans->rotation[1] < -CGLM_PI)
+            camTrans->rotation[1] = CGLM_PI;
+    }
 }
 
 void example_imgui (ecs_iter_t* it) {
@@ -222,7 +244,7 @@ int init_example(void) {
     ECS_SYSTEM(world, example_imgui_cube, imgui_stage, CubeMesh)
     ECS_SYSTEM(world, camera_movement, update_stage, Camera, Transform)
     create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
-    load_png_texture("textures/cat.png", &example_texture);
+    load_png_texture("textures/test.png", &example_texture);
     Transform transform1 = {
                 .position = {0, 0.1f, -2.f},
                 .rotation = {-CGLM_PI / 3, -CGLM_PI / 3, 0},
