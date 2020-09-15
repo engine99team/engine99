@@ -1,0 +1,52 @@
+image: Visual Studio 2015
+init:
+  - git config --global core.autocrlf input
+clone_folder: c:/projects/engine99
+shallow_clone: true
+matrix:
+  fast_finish: false
+
+platform:
+  - x64
+#  - x86
+
+configuration:
+  - Debug
+#  - Release
+
+environment:
+  matrix:
+    - TOOLCHAIN: msvc10
+    - TOOLCHAIN: msvc12
+    - TOOLCHAIN: msvc14
+
+  global:
+    SDL2_ROOT: C:/cmake_modules/sdl2
+
+
+install:
+  - appveyor DownloadFile https://www.libsdl.org/release/SDL2-devel-2.0.12-VC.zip -FileName SDL2dev.zip
+  - 7z e -y SDL2dev.zip -o"C:/cmake_modules/sdl2"
+  - appveyor DownloadFile https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip/download -FileName GLEWdev.zip
+  - 7z e -y GLEWdev.zip -o"C:/cmake_modules/glew"
+  - appveyor DownloadFile https://sourceforge.net/projects/gnuwin32/files/zlib/1.2.3/zlib-1.2.3-lib.zip/download -FileName zlib.zip
+  - 7z e -y zlib.zip -o"C:/cmake_modules/zlib"
+  - cmd: SET PATH=C:\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\;%PATH%
+  - cmd: SET CMAKE_PREFIX_PATH=C:/cmake_modules/glew;C:/cmake_modules/sdl2;C:/cmake_modules/zlib;%CMAKE_PREFIX_PATH%
+  - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe"
+  - git clone https://github.com/recp/cglm.git
+  - cd cglm && mkdir build && cd build
+  - cmake -G "MinGW Makefiles" ..
+  - mingw32-make.exe .
+  - mingw32-make.exe install
+  - cd ../..
+
+build_script:
+  - git clone https://github.com/tcbrindle/sdl2-cmake-scripts.git %APPVEYOR_BUILD_FOLDER%/cmake
+  - mkdir build
+  - cd build
+  - cmake -G "MinGW Makefiles" -DGLEW_INCLUDE_DIR="C:/cmake_modules/glew/include" -DGLEW_LIBRARY="C:/cmake_modules/glew/lib" -DCMAKE_MODULE_PATH="c:/projects/engine99/cmake" %CMAKE_CONFIGURE_FLAGS% ..
+  - mingw32-make .
+
+#test_script:
+#  - ctest -C %CONFIGURATION% --output-on-failure
