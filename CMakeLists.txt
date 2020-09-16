@@ -30,13 +30,13 @@ include_directories(${ZLIB_INCLUDE_DIRS})
 
 include_directories(ThirdParty)
 file(GLOB THIRD_PARTY_SRC ThirdParty/*.c)
-add_library(ThirdPartyLibs ${THIRD_PARTY_SRC})
+add_library(ThirdPartyLibs SHARED ${THIRD_PARTY_SRC})
 
 foreach(MODULE ${MODULES})
     file(GLOB MODULE_SRC ${MODULE}/src/*.c)
     set(MODULE_INCLUDES ${MODULE}/include/)
     include_directories(${MODULE_INCLUDES})
-    add_library(${MODULE} ${MODULE_SRC})
+    add_library(${MODULE} SHARED ${MODULE_SRC})
 endforeach()
 
 file(GLOB GAME_SRC ${GAME_DIR}/src/*.c)
