@@ -5,7 +5,10 @@
 #include <SDL2/SDL_opengl.h>
 #include "globals.h"
 #include "config.h"
-
+/**
+ * @brief creates window
+ * @return 0 if works correctly
+ */
 int create_window() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         log_error("Failed to init SDL");
@@ -25,7 +28,7 @@ int create_window() {
                               CONFIG_WINDOW_WIDTH, CONFIG_WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
 
     if (window == NULL) {
-        log_error("Failed to create window");
+        log_error("Failed to create window. %s", SDL_GetError());
         return 1;
     }
     glEnable(GL_MULTISAMPLE);
@@ -38,7 +41,9 @@ int create_window() {
 #endif
     return 0;
 }
-
+/**
+ * @brief destroys window and frees memory
+ */
 int destroy_window() {
     SDL_GL_DeleteContext(gl_context);
     if (window != NULL)

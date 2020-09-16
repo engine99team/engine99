@@ -8,7 +8,10 @@ ECS_TAG_DECLARE(render_stage);
 ECS_TAG_DECLARE(gui_stage);
 ECS_TAG_DECLARE(imgui_stage);
 ECS_TAG_DECLARE(post_render_stage);
-
+/**
+ * @brief inits stages of pre- post- and render
+ * @return
+ */
 int init_stages (void) {
     ECS_TAG_DEFINE(world, events_stage);
     ECS_TAG_DEFINE(world, update_stage);
