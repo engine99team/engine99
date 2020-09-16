@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/engine99team/engine99.svg?token=A3tSJzqqxN8pUfRxxzsu&branch=master)](https://travis-ci.com/engine99team/engine99)
 [![CMake](https://github.com/engine99team/engine99/workflows/CMake/badge.svg)](https://github.com/engine99team/engine99/actions)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/72bf37a997b5448cbff0767dd94dbb7d)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=engine99team/engine99&amp;utm_campaign=Badge_Grade)
+[![Build status](https://ci.appveyor.com/api/projects/status/ifw6fp4sto7s7cr7?svg=true)](https://ci.appveyor.com/project/AndrewChe7/engine99)
 
 It's gonna be really cool game engine made with C99 technologies. Only open source, only hardcore.
 I use SDL for cross platform input and window drawing, opengl for rendering, nuklear for nice
