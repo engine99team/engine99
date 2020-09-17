@@ -2,7 +2,12 @@
 #include <log.h>
 #include <stdlib.h>
 #include "graphics_components.h"
-
+/**
+ * @brief returns size of file writes on pointer file_size
+ * @param filepath path to texture file
+ * @param file_size pointer to int
+ * @return 0 if working correct, -1 if  can't open shader file
+ */
 int get_size_of_file(const char* filepath, int32_t* file_size) {
     FILE* file = fopen(filepath, "rb");
     if (file == NULL) {
@@ -14,7 +19,13 @@ int get_size_of_file(const char* filepath, int32_t* file_size) {
     fclose(file);
     return 0;
 }
-
+/**
+ * @brief reads shader to buffer from file
+ * @param filepath path to file with shader
+ * @param buffer pointer to buffer
+ * @param size size of buffer
+ * @return 0 if working correct, -1 if  can't open shader file
+ */
 int read_from_file(const char* filepath, GLchar* buffer, GLint size) {
     FILE* file = fopen(filepath, "rb");
     if (file == NULL) {
@@ -26,7 +37,13 @@ int read_from_file(const char* filepath, GLchar* buffer, GLint size) {
     fclose(file);
     return 0;
 }
-
+/**
+ * @brief load shader from file to int* shader
+ * @param filepath path to shader file
+ * @param shader_type type of shader:
+ * @param shader pointer on shader
+ * @return -1 if can't allocate buffer or can't load shader data
+ */
 int load_shader(const char* filepath, GLenum shader_type, GLuint* shader) {
     GLuint local_shader;
     int32_t status;
@@ -54,7 +71,13 @@ int load_shader(const char* filepath, GLenum shader_type, GLuint* shader) {
     *shader = local_shader;
     return 0;
 }
-
+/**
+ * @brief linking fragment shader and vertex shader to shader_program
+ * @param frag_filepath filepath to fragment shader
+ * @param vert_filepath filepath to vertex shader
+ * @param shader_program out  - pointer to shader_program
+ * @return -1 if can't load shaders or fail to link shaders to shader program
+ */
 int create_shader_program(const char* frag_filepath, const char* vert_filepath, GLuint* shader_program) {
     GLuint frag_shader, vert_shader, local_shader_program;
     uint32_t res;
@@ -93,7 +116,14 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
     ecs_set(world, shaderProgramEntity, ShaderProgram, {local_shader_program});
     return 0;
 }
-
+/**
+ * @brief loads png to memory
+ * @param filepath path to png file
+ * @param width png width
+ * @param height png height
+ * @param data out
+ * @return -1 if can't init SPNG context or erors with png file(can't open or failed to load or get size) or can't allocate a buffer or problems with spng_decode_image()
+ */
 int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsigned char **data) {
     spng_ctx *png_ctx = spng_ctx_new(0);
     if (png_ctx == NULL) {
@@ -172,7 +202,12 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     fclose(png_file);
     return 0;
 }
-
+/**
+ * @brief loading png to texture
+ * @param filepath in
+ * @param texture out
+ * @return -1 if can't read png data
+ */
 int load_png_texture(const char* filepath, GLuint* texture) {
     uint32_t width, height;
     int res;
@@ -197,7 +232,12 @@ int load_png_texture(const char* filepath, GLuint* texture) {
     free(data);
     return 0;
 }
-
+/**
+ * @brief creating trasform matrix from transform
+ * @param transform camera transformation
+ * @param result out
+ * @return
+ */
 int create_transform_matrix(Transform* transform, mat4* result) {
     mat4 matrix, rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
     Camera* cam;

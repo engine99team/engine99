@@ -29,7 +29,7 @@ int create_window() {
                               CONFIG_WINDOW_WIDTH, CONFIG_WINDOW_HEIGHT, SDL_WINDOW_OPENGL);
 
     if (window == NULL) {
-        log_error("Failed to create window");
+        log_error("Failed to create window. %s", SDL_GetError());
         return 1;
     }
     glEnable(GL_MULTISAMPLE);
@@ -44,7 +44,7 @@ int create_window() {
 }
 
 /**
- * @brief Destroys window and clears memory
+ * @brief destroys window and frees memory
  */
 int destroy_window() {
     SDL_GL_DeleteContext(gl_context);
