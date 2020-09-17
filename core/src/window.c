@@ -5,9 +5,10 @@
 #include <SDL2/SDL_opengl.h>
 #include "globals.h"
 #include "config.h"
+
 /**
- * @brief creates window
- * @return 0 if works correctly
+ * @brief Creates window with SDL2 and init opengl context in it
+ * @return zero if there's no problems
  */
 int create_window() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -41,6 +42,7 @@ int create_window() {
 #endif
     return 0;
 }
+
 /**
  * @brief destroys window and frees memory
  */
