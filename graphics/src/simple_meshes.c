@@ -99,6 +99,13 @@ void delete_cube(ecs_iter_t* it) {
     }
 }
 
+/**
+ * @brief Creates triangle mesh entity
+ * @param shader_program shader program, that is used to render mesh (created by create_shader_program)
+ * @param texture texture, that is used to render mesh (created with load_png_texture)
+ * @param transform transform component
+ * @return zero if there is no problems
+ */
 int create_triangle(GLuint shader_program, GLuint texture, const Transform* transform) {
     GLuint VBO, VAO;
     float triangle_vertices[] = {
@@ -136,6 +143,13 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
     return 0;
 }
 
+/**
+ * @brief Creates rectangle mesh entity
+ * @param shader_program shader program, that is used to render mesh (created by create_shader_program)
+ * @param texture texture, that is used to render mesh (created with load_png_texture)
+ * @param transform transform component
+ * @return zero if there is no problems
+ */
 int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform) {
     GLuint VBO, VAO, EBO;
     // Rectangle
@@ -184,6 +198,13 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
     return 0;
 }
 
+/**
+ * @brief Creates cube mesh entity
+ * @param shader_program shader program, that is used to render mesh (created by create_shader_program)
+ * @param texture texture, that is used to render mesh (created with load_png_texture)
+ * @param transform transform component
+ * @return zero if there is no problems
+ */
 int create_cube(GLuint shader_program, GLuint texture, const Transform* transform) {
     GLuint VBO, VAO;
     float vertices[] = {

@@ -2,6 +2,7 @@
 #include <log.h>
 #include <stdlib.h>
 #include "graphics_components.h"
+
 /**
  * @brief returns size of file writes on pointer file_size
  * @param filepath path to texture file
@@ -19,6 +20,7 @@ int get_size_of_file(const char* filepath, int32_t* file_size) {
     fclose(file);
     return 0;
 }
+
 /**
  * @brief reads shader to buffer from file
  * @param filepath path to file with shader
@@ -37,6 +39,7 @@ int read_from_file(const char* filepath, GLchar* buffer, GLint size) {
     fclose(file);
     return 0;
 }
+
 /**
  * @brief load shader from file to int* shader
  * @param filepath path to shader file
@@ -71,6 +74,7 @@ int load_shader(const char* filepath, GLenum shader_type, GLuint* shader) {
     *shader = local_shader;
     return 0;
 }
+
 /**
  * @brief linking fragment shader and vertex shader to shader_program
  * @param frag_filepath filepath to fragment shader
@@ -116,6 +120,7 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
     ecs_set(world, shaderProgramEntity, ShaderProgram, {local_shader_program});
     return 0;
 }
+
 /**
  * @brief loads png to memory
  * @param filepath path to png file
@@ -202,6 +207,7 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
     fclose(png_file);
     return 0;
 }
+
 /**
  * @brief loading png to texture
  * @param filepath in
@@ -232,6 +238,7 @@ int load_png_texture(const char* filepath, GLuint* texture) {
     free(data);
     return 0;
 }
+
 /**
  * @brief creating trasform matrix from transform
  * @param transform camera transformation
