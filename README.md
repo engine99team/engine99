@@ -27,13 +27,28 @@ imgui, flecs as ECS framework.
 TODO
 
 ## Features, I'd like to implement
-* Main features (rendering, input, physics, sound system and other)
-* Scripting language (I really love python)
-* ECS
-* Modules and plugins system
-* Developer tools and other stuff
+
+* [ ] Main features 
+  * [ ] rendering 
+    * [x] load textures
+    * [x] load shaders
+    * [ ] load 3d models
+    * [x] render simple shapes
+    * [ ] render 3d models
+  * [x] input
+  * [ ] physics 
+  * [ ] sound system 
+  * [ ] UI
+    * [ ] Simple GUI
+    * [x] imgui for tools
+  * [ ] other
+* [ ] Scripting language (I really love python)
+* [x] ECS
+* [x] Modules and plugins system
+* [ ] Developer tools and other stuff
 
 ## Requirements for contributors
+
 * Only open source third party tools
 * Only C99 compatible code
 * Cross platform compatibility
