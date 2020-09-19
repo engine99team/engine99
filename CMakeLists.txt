@@ -20,6 +20,8 @@ if(APPLE)
 elseif(UNIX)
     set(_GNU_SOURCE 1)
     set(platform_flags "-ldl -lpthread")
+else()
+    include_directories(cglm_INCLUDE_DIRS)
 endif()
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${GAME_DIR}/shaders/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/shaders/)
