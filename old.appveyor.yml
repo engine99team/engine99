@@ -31,7 +31,7 @@ install:
   - 7z e -y GLEWdev.zip -o"C:/cmake_modules/glew"
   - appveyor DownloadFile https://sourceforge.net/projects/gnuwin32/files/zlib/1.2.3/zlib-1.2.3-lib.zip/download -FileName zlib.zip
   - 7z e -y zlib.zip -o"C:/cmake_modules/zlib"
-  - cmd: SET PATH=C:\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\;%PATH%
+  - cmd: SET PATH=C:\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\;C:/cmake_modules/glew/lib/Release/x64/;C:/cmake_modules/sdl2/lib/x64/;C:/cmake_modules/zlib/lib;%PATH%
   - cmd: SET CMAKE_PREFIX_PATH=C:/cmake_modules/glew;C:/cmake_modules/sdl2;C:/cmake_modules/zlib;%CMAKE_PREFIX_PATH%
   - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe"
   - git clone https://github.com/recp/cglm.git
@@ -40,13 +40,14 @@ install:
   - mingw32-make.exe
   - mingw32-make.exe install
   - cd ../..
+  - cmd: SET PATH=C:\Program Files (x86)\cglm\lib;%PATH%
 
 build_script:
   - git clone https://github.com/tcbrindle/sdl2-cmake-scripts.git %APPVEYOR_BUILD_FOLDER%/cmake
   - mkdir build
   - cd build
-  - cmake -G "MinGW Makefiles" -DGLEW_INCLUDE_DIR="C:/cmake_modules/glew/include" -Dcglm_INCLUDE_DIRS="C:/Program Files (x86)/cglm/include/" -DCMAKE_MODULE_PATH="C:/projects/engine99/cmake" %CMAKE_CONFIGURE_FLAGS% ..
-  - mingw32-make.exe
+  - cmake -G "MinGW Makefiles" -DSDL2_INCLUDE_DIRS="C:/cmake_modules/sdl2/include" -DGLEW_INCLUDE_DIR="C:/cmake_modules/glew/include" -Dcglm_INCLUDE_DIRS="C:/Program Files (x86)/cglm/include/" -DCMAKE_MODULE_PATH="C:/projects/engine99/cmake" %CMAKE_CONFIGURE_FLAGS% ..
+  - cmake --build .
 
 after_build:
   - 7z a C:/projects/engine99/build.zip C:/projects/engine99/build.zip
