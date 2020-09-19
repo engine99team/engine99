@@ -77,7 +77,7 @@ typedef struct {
 } tinyobj_attrib_t;
 
 
-#define TINYOBJ_FLAG_TRIANGULATE (1 << 0)
+#define TINYOBJ_FLAG_TRIANGULATE ((unsigned int)1 << (unsigned int)0)
 
 #define TINYOBJ_INVALID_INDEX (0x80000000)
 
