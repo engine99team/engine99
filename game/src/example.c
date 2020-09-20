@@ -7,6 +7,7 @@
 #include "core_components.h"
 #include "graphics_components.h"
 #include <log.h>
+#include <models.h>
 
 float axis_ws = 0, axis_ad = 0;
 float   a = 0,
@@ -237,6 +238,7 @@ void example_imgui_fps(ecs_iter_t* it) {
 
 int init_example(void) {
     GLuint example_texture, shader_program;
+    GLuint model_VAO,  model_EBO, model_VBO;
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
@@ -257,6 +259,8 @@ int init_example(void) {
             .scale = {1, 1, 1}
     };
     create_cube(shader_program, example_texture, &transform2);
+
+    load_model("models/test.obj", &model_VAO, &model_VBO, &model_EBO);
     return 0;
 }
 
