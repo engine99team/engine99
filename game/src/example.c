@@ -260,7 +260,7 @@ int init_example(void) {
     };
     create_cube(shader_program, example_texture, &transform2);
 
-    load_model("models/test.obj", &model_VAO, &model_VBO, &model_EBO);
+    load_model("models/test.obj", &model_VAO, &model_VBO);
     return 0;
 }
 

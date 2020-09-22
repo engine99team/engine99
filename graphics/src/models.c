@@ -2,9 +2,13 @@
 #include <tinyobj_loader_c.h>
 #include <stdlib.h>
 
-void delete_model(ecs_iter_t* it) {
-}
+ECS_COMPONENT_DECLARE(Mesh);
 
+void delete_mesh(ecs_iter_t* it) {
+    Mesh* mesh = ecs_column(it, Mesh, 0);
+    glDeleteBuffers(1, &mesh->VBO);
+    glDeleteBuffers(1, &mesh->VAO);
+}
 
 void get_file_data(const char *filename, char **buf, size_t *len) {
     FILE* file;
@@ -30,14 +34,14 @@ void get_file_data(const char *filename, char **buf, size_t *len) {
     *len = len1;
 }
 
-int load_model(const char* filename, GLuint* VAO, GLuint* VBO, GLuint* EBO) {
+int load_model(const char* filename, GLuint* VAO, GLuint* VBO) {
     tinyobj_attrib_t attrib;
     tinyobj_shape_t* shapes = NULL;
     size_t num_shapes;
     tinyobj_material_t* materials = NULL;
     size_t num_materials;
     GLuint lVAO, lVBO, lEBO;
-    int i;
+    int i, j;
 
     unsigned int flags = TINYOBJ_FLAG_TRIANGULATE;
     int ret = tinyobj_parse_obj(&attrib, &shapes, &num_shapes, &materials,
@@ -46,37 +50,35 @@ int load_model(const char* filename, GLuint* VAO, GLuint* VBO, GLuint* EBO) {
         log_error("Error: %d", ret);
         return 1;
     }
-    log_info("faces = %d", attrib.num_faces);
 
-//    int faces[attrib.num_faces * 3];
-//    for (i = 0; i < attrib.num_faces; i++) {
-//        faces[i] = attrib.faces[i].v_idx;
-//    }
-//
-//    glGenBuffers(1, &lVBO);
-//    glGenBuffers(1, &lEBO);
-//    glGenVertexArrays(1, &lVAO);
-//
-//    glBindVertexArray(lVAO);
-//
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lEBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(), , GL_STATIC_DRAW);
-//
-//    glBindBuffer(GL_ARRAY_BUFFER, lVBO);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_vertices), rect_vertices, GL_STATIC_DRAW);
-//
+    float vertices[attrib.num_face_num_verts * 5];
+
+    for (i = 0; i < attrib.num_face_num_verts; i++) {
+        //
+    }
+
+    glGenBuffers(1, &lVBO);
+    glGenVertexArrays(1, &lVAO);
+
+    glBindVertexArray(lVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, lVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 
-
-//    *VAO = lVAO;
-//    *VBO = lVBO;
-//    *EBO = lEBO;
+    *VAO = lVAO;
+    *VBO = lVBO;
     tinyobj_attrib_free(&attrib);
     tinyobj_shapes_free(shapes, num_shapes);
     tinyobj_materials_free(materials, num_materials);
     return 0;
 }
 
-int init_models (void) {
+int create_mesh() {
 
+}
+
+int init_models (void) {
+    ECS_COMPONENT_DEFINE(world, Mesh);
+    ECS_TRIGGER(world, delete_mesh, EcsOnRemove, Mesh);
 }

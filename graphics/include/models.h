@@ -9,8 +9,9 @@ typedef struct Mesh {
     GLuint shader_program, VBO, VAO, texture;
 } Mesh;
 
+ECS_COMPONENT_EXTERN(Mesh);
 
 
-int load_model(const char* filename, GLuint* VAO, GLuint* VBO, GLuint* EBO);
+int load_model(const char* filename, GLuint* VAO, GLuint* VBO);
 
 #endif //ENGINE99_MODELS_H
