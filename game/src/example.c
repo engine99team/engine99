@@ -238,7 +238,8 @@ void example_imgui_fps(ecs_iter_t* it) {
 
 int init_example(void) {
     GLuint example_texture, shader_program;
-    GLuint model_VAO,  model_EBO, model_VBO;
+    GLuint model_VAO, model_VBO;
+    uint32_t model_triangles;
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
@@ -260,7 +261,16 @@ int init_example(void) {
     };
     create_cube(shader_program, example_texture, &transform2);
 
-    load_model("models/test.obj", &model_VAO, &model_VBO);
+    load_model("models/test.obj", &model_VAO, &model_VBO, &model_triangles);
+    ecs_entity_t model = ecs_new(world, 0);
+    ecs_add(world, model, Transform);
+    ecs_set(world, model, Transform, {
+        .position = {0, 2.0f, 0.f},
+        .rotation = {0, 0, 0},
+        .scale = {1, 1, 1}
+    });
+    vec4 color = {1, 1, 1, 1};
+    set_mesh_component(model, model_VAO, model_VBO, shader_program, example_texture, color, model_triangles);
     return 0;
 }
 

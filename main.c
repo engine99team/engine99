@@ -14,6 +14,7 @@
 #include "core_components.h"
 #include "simple_meshes.h"
 #include "config.h"
+#include "models.h"
 
 int main() {
     int res;
@@ -42,6 +43,7 @@ int main() {
     init_core_components();
     init_graphics_components();
     init_simple_meshes();
+    init_models();
     ECS_TAG_DEFINE(world, global_tag);
     ECS_ENTITY(world, global_entity, global_tag);
 
