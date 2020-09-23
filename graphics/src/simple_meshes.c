@@ -25,7 +25,7 @@ void render_rectangle(ecs_iter_t* it) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindVertexArray(mesh->VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 }
 
@@ -86,7 +86,6 @@ void delete_rectangle(ecs_iter_t* it) {
     for (i = 0; i < it->count; i++, mesh++) {
         glDeleteVertexArrays(1, &mesh->VAO);
         glDeleteBuffers(1, &mesh->VBO);
-        glDeleteBuffers(1, &mesh->EBO);
     }
 }
 
@@ -113,21 +112,7 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
             0.0f,  0.5f, 0.0f, 0.5f, 1.0f
     };
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_vertices), triangle_vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    load_vertices_to_buffers(triangle_vertices, sizeof(triangle_vertices), &VAO, &VBO);
     ecs_entity_t triangleEntity = ecs_new(world, TriangleType);
     ecs_set(world, triangleEntity, TriangleMesh, {
         .color = {1.0f, 1.0f, 1.0f, 0.5f},
@@ -151,44 +136,23 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
  * @return zero if there is no problems
  */
 int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform) {
-    GLuint VBO, VAO, EBO;
+    GLuint VBO, VAO;
     // Rectangle
     float rect_vertices[] = {
             0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
             0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
             -0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
-            -0.5f,  0.5f, 0.0f,   0.0f, 1.0f
+
+            0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f,   0.0f, 1.0f,
+            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f
     };
-
-    unsigned int rect_indices[] = {
-            0, 1, 3,
-            1, 2, 3
-    };
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rect_indices), rect_indices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_vertices), rect_vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    load_vertices_to_buffers(rect_vertices, sizeof(rect_vertices), &VAO, &VBO);
     ecs_entity_t rectangleEntity = ecs_new(world, RectType);
     ecs_set(world, rectangleEntity, RectangleMesh, {.color = {1.0f, 1.0f, 1.0f, 1.0f},
                                                     .shader_program = shader_program,
                                                     .VBO = VBO,
                                                     .VAO = VAO,
-                                                    .EBO = EBO,
                                                     .texture = texture});
     ecs_set(world, rectangleEntity, Transform, {
         .position = {transform->position[0], transform->position[1], transform->position[2]},
@@ -250,21 +214,7 @@ int create_cube(GLuint shader_program, GLuint texture, const Transform* transfor
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    load_vertices_to_buffers(vertices, sizeof(vertices), &VAO, &VBO);
     ecs_entity_t cubeEntity = ecs_new(world, CubeType);
     ecs_set(world, cubeEntity, CubeMesh, {
         .color = {1.0f, 1.0f, 1.0f, 1.f},

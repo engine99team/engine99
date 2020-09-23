@@ -45,6 +45,7 @@ void get_file_data(const char *filename, char **buf, size_t *len) {
     res = fseek(file, 0, SEEK_END);
     if (res) {
         log_error("Can't get size of file %s", filename);
+        fclose(file);
         return;
     }
     len1 = ftell(file);
@@ -54,6 +55,7 @@ void get_file_data(const char *filename, char **buf, size_t *len) {
     buf1[len1] = '\0';
     *buf = buf1;
     *len = len1;
+    fclose(file);
 }
 
 int load_model(const char* filename, GLuint* VAO, GLuint* VBO, uint32_t* num_triangles) {
@@ -90,23 +92,7 @@ int load_model(const char* filename, GLuint* VAO, GLuint* VBO, uint32_t* num_tri
             vertex[4] = attrib.texcoords[idxj.vt_idx*2 + 1];
         }
     }
-
-    glGenBuffers(1, &lVBO);
-    glGenVertexArrays(1, &lVAO);
-
-    glBindVertexArray(lVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, lVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
+    load_vertices_to_buffers(vertices, sizeof(vertices), &lVAO, &lVBO);
     *VAO = lVAO;
     *VBO = lVBO;
     *num_triangles = attrib.num_face_num_verts;

@@ -1,8 +1,8 @@
 language: c
-dist: bionic
+dist: focal
+os: linux
 stages:
-  - linux build
-  - mac os build
+  - build
 install:
   - git clone https://github.com/recp/cglm.git
   - cd cglm
@@ -13,7 +13,7 @@ install:
   - cd ../..
 jobs:
   include:
-    - stage: linux build
+    - stage: build
       name: linux_amd64_gcc
       os: linux
       arch: amd64
@@ -54,8 +54,7 @@ jobs:
         - mkdir build && cd build
         - cmake ..
         - make
-    - stage: mac os build
-      name: mac os x
+    - name: mac os x
       os: osx
       osx_image: xcode11.2
       script:
@@ -64,6 +63,7 @@ jobs:
         - make
 addons:
   apt:
+    update: true
     sources:
       - ubuntu-toolchain-r-test
     packages:

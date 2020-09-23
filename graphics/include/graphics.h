@@ -20,5 +20,6 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
 int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsigned char **data);
 int load_png_texture(const char* filepath, GLuint* texture);
 int create_transform_matrix(Transform* transform, mat4* result);
+int load_vertices_to_buffers (const float* vertices, size_t sizeof_vertices,GLuint* VAO, GLuint* VBO);
 
 #endif //ENGINE99_GRAPHICS_H

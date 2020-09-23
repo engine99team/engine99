@@ -13,7 +13,7 @@ typedef struct TriangleMesh {
 
 typedef struct RectangleMesh {
     vec4 color;
-    GLuint shader_program, VBO, VAO, EBO, texture;
+    GLuint shader_program, VBO, VAO, texture;
 } RectangleMesh;
 
 typedef struct CubeMesh {

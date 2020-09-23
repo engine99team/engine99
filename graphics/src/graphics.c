@@ -239,6 +239,28 @@ int load_png_texture(const char* filepath, GLuint* texture) {
     return 0;
 }
 
+int load_vertices_to_buffers (const float* vertices, size_t sizeof_vertices,GLuint* VAO, GLuint* VBO) {
+    GLuint lVAO, lVBO;
+    glGenBuffers(1, &lVBO);
+    glGenVertexArrays(1, &lVAO);
+
+    glBindVertexArray(lVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, lVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof_vertices, vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) 0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    *VAO = lVAO;
+    *VBO = lVBO;
+    return 0;
+}
+
 /**
  * @brief creating trasform matrix from transform
  * @param transform camera transformation
