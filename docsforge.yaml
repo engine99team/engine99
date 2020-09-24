@@ -16,7 +16,13 @@ autodocSettings:
     EXCLUDE: test tests examples
     EXCLUDE_PATTERNS: '*/tests/* */test/* */example*'
     includeApi: []
-    excludeApi: []
+    excludeApi:
+      - ECS_TAG_EXTERN
+      - ECS_TAG_DECLARE
+      - ECS_TYPE_DECLARE
+      - ECS_TYPE_EXTERN
+      - ECS_COMPONENT_EXTERN
+      - ECS_COMPONENT_DECLARE
     documentSingleUnderscore: true
     documentStatic: false
     documentProtected: true
