@@ -21,9 +21,7 @@ imgui, flecs as ECS framework.
     By default this line build game for `game` directory, but you can specify your game with `cmake .. -DGAME_DIR=custom_game`
 4. `make`
 
-## API
-
-TODO
+## [API](https://engine99.docsforge.com/master/api/)
 
 ## Features, I'd like to implement
 
