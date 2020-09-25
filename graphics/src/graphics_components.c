@@ -15,10 +15,6 @@ void delete_shader_program(ecs_iter_t* it) {
     glDeleteProgram(shader_program->id);
 }
 
-/**
- * @brief Inits graphics components
- * @return zero if no problems
- */
 int init_graphics_components(void) {
     ECS_COMPONENT_DEFINE(world, Texture);
     ECS_COMPONENT_DEFINE(world, ShaderProgram);

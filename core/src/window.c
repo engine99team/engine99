@@ -6,10 +6,6 @@
 #include "globals.h"
 #include "config.h"
 
-/**
- * @brief Creates window with SDL2 and init opengl context in it
- * @return zero if there's no problems
- */
 int create_window() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         log_error("Failed to init SDL");
@@ -43,9 +39,6 @@ int create_window() {
     return 0;
 }
 
-/**
- * @brief destroys window and frees memory
- */
 int destroy_window() {
     SDL_GL_DeleteContext(gl_context);
     if (window != NULL)
