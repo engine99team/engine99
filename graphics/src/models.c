@@ -75,21 +75,24 @@ int load_model(const char* filename, GLuint* VAO, GLuint* VBO, uint32_t* num_tri
         return 1;
     }
 
-    float vertices[attrib.num_face_num_verts * 15];
+    float vertices[attrib.num_face_num_verts * 24];
 
     //for each face
     for (i = 0; i < attrib.num_face_num_verts; i++) {
-        float* face = vertices + 15 * i;
+        float* face = vertices + 24 * i;
         tinyobj_vertex_index_t* idx = attrib.faces + i*3;
         //for each vertex
         for (j = 0; j < 3; j++) {
-            float* vertex = face + j*5;
+            float* vertex = face + j*8;
             tinyobj_vertex_index_t idxj = idx[j];
             vertex[0] = attrib.vertices[idxj.v_idx*3];
             vertex[1] = attrib.vertices[idxj.v_idx*3 + 1];
             vertex[2] = attrib.vertices[idxj.v_idx*3 + 2];
-            vertex[3] = attrib.texcoords[idxj.vt_idx*2];
-            vertex[4] = attrib.texcoords[idxj.vt_idx*2 + 1];
+            vertex[3] = attrib.normals[idxj.vn_idx*3];
+            vertex[4] = attrib.normals[idxj.vn_idx*3 + 1];
+            vertex[5] = attrib.normals[idxj.vn_idx*3 + 2];
+            vertex[6] = attrib.texcoords[idxj.vt_idx*2];
+            vertex[7] = attrib.texcoords[idxj.vt_idx*2 + 1];
         }
     }
     load_vertices_to_buffers(vertices, sizeof(vertices), &lVAO, &lVBO);

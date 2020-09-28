@@ -101,9 +101,9 @@ void delete_cube(ecs_iter_t* it) {
 int create_triangle(GLuint shader_program, GLuint texture, const Transform* transform) {
     GLuint VBO, VAO;
     float triangle_vertices[] = {
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-            0.0f,  0.5f, 0.0f, 0.5f, 1.0f
+            -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+            0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+            0.0f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.5f, 1.0f
     };
     load_vertices_to_buffers(triangle_vertices, sizeof(triangle_vertices), &VAO, &VBO);
     ecs_entity_t triangleEntity = ecs_new(world, TriangleType);
@@ -125,13 +125,13 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
     GLuint VBO, VAO;
     // Rectangle
     float rect_vertices[] = {
-            0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
-            0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
-            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
+            0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+            0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+            -0.5f, -0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
 
-            0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f,   0.0f, 1.0f,
-            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f
+            0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   0.0f, 1.0f,
+            -0.5f, -0.5f, 0.0f,    0.0f, 0.0f, 1.0f,   0.0f, 0.0f
     };
     load_vertices_to_buffers(rect_vertices, sizeof(rect_vertices), &VAO, &VBO);
     ecs_entity_t rectangleEntity = ecs_new(world, RectType);
@@ -151,47 +151,47 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
 int create_cube(GLuint shader_program, GLuint texture, const Transform* transform) {
     GLuint VBO, VAO;
     float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,    0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,    0.0f, 0.0f, -1.0f,    1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,    0.0f, 0.0f, -1.0f,    1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,    0.0f, 0.0f, -1.0f,    1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,    0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,    0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,      0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,    0.0f, 0.0f, 1.0f,      1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,    0.0f, 0.0f, 1.0f,      1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,    0.0f, 0.0f, 1.0f,      1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,      0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,      0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,   -1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,   -1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,   -1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,     1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,     1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f, 0.0f,    0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,     0.0f, -1.0f, 0.0f,    1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,     0.0f, -1.0f, 0.0f,    1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,     0.0f, -1.0f, 0.0f,    1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, -1.0f, 0.0f,    0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f, 0.0f,    0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 1.0f
     };
     load_vertices_to_buffers(vertices, sizeof(vertices), &VAO, &VBO);
     ecs_entity_t cubeEntity = ecs_new(world, CubeType);
