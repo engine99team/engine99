@@ -53,12 +53,22 @@ int load_png_data (const char* filepath, uint32_t* width, uint32_t* height, unsi
 int load_png_texture(const char* filepath, GLuint* texture);
 
 /**
- * Creating trasformation matrix from transform for rendering
- * @param[in] transform object's transform
- * @param[out] result output matrix
- * @return
+ * Creates matrices from transform
+ * @param[in] transform Transform component
+ * @param[out] rot_matrix output rotation matrix
+ * @param[out] move_matrix output movement matrix
+ * @param[out] scale_matrix output scale matrix
+ * @param[out] proj_matrix output projection matrix (based on Camera entity)
+ * @param[out] lookat_matrix output lookat matrix (uses Camera entity too)
+ * @param[out] cam_rot_matrix output Camera rotation matrix
+ * @return 0
  */
-int create_transform_matrix(Transform* transform, mat4* result);
+int create_transform_matrix(Transform* transform,   mat4* rot_matrix,
+                            mat4* move_matrix,
+                            mat4* scale_matrix,
+                            mat4* proj_matrix,
+                            mat4* lookat_matrix,
+                            mat4* cam_rot_matrix);
 
 /**
  * Loads vertices array to buffers
@@ -69,5 +79,14 @@ int create_transform_matrix(Transform* transform, mat4* result);
  * @return zero if no problems
  */
 int load_vertices_to_buffers (const float* vertices, size_t sizeof_vertices,GLuint* VAO, GLuint* VBO);
+
+int use_shader(GLuint shader_program,
+               vec4 color,
+               mat4 rot_matrix,
+               mat4 move_matrix,
+               mat4 scale_matrix,
+               mat4 proj_matrix,
+               mat4 lookat_matrix,
+               mat4 cam_rot_matrix);
 
 #endif //ENGINE99_GRAPHICS_H

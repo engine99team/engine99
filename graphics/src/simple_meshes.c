@@ -11,15 +11,18 @@ ECS_TYPE_DECLARE(RectType);
 ECS_TYPE_DECLARE(TriangleType);
 
 void render_rectangle(ecs_iter_t* it) {
-    mat4 transform_matrix;
+    mat4 rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
     Transform* transform = ecs_column(it, Transform, 2);
     int i;
     for (i = 0; i < it->count; i++, mesh++, transform++) {
-        create_transform_matrix(transform, &transform_matrix);
-        glUseProgram(mesh->shader_program);
-        glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color[0], mesh->color[1], mesh->color[2], mesh->color[3]);
-        glUniformMatrix4fv(glGetUniformLocation(mesh->shader_program, "transform"), 1, GL_FALSE, (GLfloat*)transform_matrix);
+        create_transform_matrix(transform,  &rot_matrix, &move_matrix,
+                                            &scale_matrix, &proj_matrix,
+                                            &lookat_matrix, &cam_rot_matrix);
+        use_shader(mesh->shader_program, mesh->color,
+                   rot_matrix, move_matrix,
+                   scale_matrix, proj_matrix,
+                   lookat_matrix, cam_rot_matrix);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mesh->texture);
         glEnable(GL_BLEND);
@@ -30,17 +33,18 @@ void render_rectangle(ecs_iter_t* it) {
 }
 
 void render_triangle(ecs_iter_t* it) {
-    mat4 transform_matrix;
+    mat4 rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
     TriangleMesh* mesh = ecs_column(it, TriangleMesh, 1);
     Transform* transform = ecs_column(it, Transform, 2);
     int i;
     for (i = 0; i < it->count; i++, mesh++, transform++) {
-        create_transform_matrix(transform, &transform_matrix);
-        glUseProgram(mesh->shader_program);
-        glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color[0], mesh->color[1], mesh->color[2],
-                    mesh->color[3]);
-        glUniformMatrix4fv(glGetUniformLocation(mesh->shader_program, "transform"), 1, GL_FALSE,
-                           (GLfloat *) transform_matrix);
+        create_transform_matrix(transform,  &rot_matrix, &move_matrix,
+                                &scale_matrix, &proj_matrix,
+                                &lookat_matrix, &cam_rot_matrix);
+        use_shader(mesh->shader_program, mesh->color,
+                   rot_matrix, move_matrix,
+                   scale_matrix, proj_matrix,
+                   lookat_matrix, cam_rot_matrix);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mesh->texture);
         glEnable(GL_BLEND);
@@ -51,17 +55,18 @@ void render_triangle(ecs_iter_t* it) {
 }
 
 void render_cube(ecs_iter_t* it) {
-    mat4 transform_matrix;
+    mat4 rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
     CubeMesh* mesh = ecs_column(it, CubeMesh, 1);
     Transform* transform = ecs_column(it, Transform, 2);
     int i;
     for (i = 0; i < it->count; i++, mesh++, transform++) {
-        create_transform_matrix(transform, &transform_matrix);
-        glUseProgram(mesh->shader_program);
-        glUniform4f(glGetUniformLocation(mesh->shader_program, "color"), mesh->color[0], mesh->color[1], mesh->color[2],
-                    mesh->color[3]);
-        glUniformMatrix4fv(glGetUniformLocation(mesh->shader_program, "transform"), 1, GL_FALSE,
-                           (GLfloat *) transform_matrix);
+        create_transform_matrix(transform,  &rot_matrix, &move_matrix,
+                                &scale_matrix, &proj_matrix,
+                                &lookat_matrix, &cam_rot_matrix);
+        use_shader(mesh->shader_program, mesh->color,
+                   rot_matrix, move_matrix,
+                   scale_matrix, proj_matrix,
+                   lookat_matrix, cam_rot_matrix);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mesh->texture);
         glEnable(GL_BLEND);

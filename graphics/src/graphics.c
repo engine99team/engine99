@@ -222,8 +222,32 @@ int load_vertices_to_buffers (const float* vertices, size_t sizeof_vertices,GLui
     return 0;
 }
 
-int create_transform_matrix(Transform* transform, mat4* result) {
-    mat4 matrix, rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
+int use_shader(GLuint shader_program,
+               vec4 color,
+               mat4 rot_matrix,
+               mat4 move_matrix,
+               mat4 scale_matrix,
+               mat4 proj_matrix,
+               mat4 lookat_matrix,
+               mat4 cam_rot_matrix) {
+    glUseProgram(shader_program);
+    glUniform4f(glGetUniformLocation(shader_program, "color"), color[0], color[1], color[2], color[3]);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "rot_matrix"), 1, GL_FALSE, (GLfloat*)rot_matrix);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "move_matrix"), 1, GL_FALSE, (GLfloat*)move_matrix);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "scale_matrix"), 1, GL_FALSE, (GLfloat*)scale_matrix);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "proj_matrix"), 1, GL_FALSE, (GLfloat*)proj_matrix);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "lookat_matrix"), 1, GL_FALSE, (GLfloat*)lookat_matrix);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "cam_rot_matrix"), 1, GL_FALSE, (GLfloat*)cam_rot_matrix);
+    return 0;
+}
+
+int create_transform_matrix(Transform* transform,   mat4* rot_matrix,
+                                                    mat4* move_matrix,
+                                                    mat4* scale_matrix,
+                                                    mat4* proj_matrix,
+                                                    mat4* lookat_matrix,
+                                                    mat4* cam_rot_matrix) {
+    mat4 lrot_matrix, lmove_matrix, lscale_matrix, lproj_matrix, llookat_matrix, lcam_rot_matrix;
     Camera* cam;
     Transform* camTrans;
     ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
@@ -232,22 +256,26 @@ int create_transform_matrix(Transform* transform, mat4* result) {
         cam = ecs_column(&it, Camera, 1);
         camTrans = ecs_column(&it, Transform, 2);
     }
-    glm_scale_make(scale_matrix, transform->scale);
-    glm_euler(transform->rotation, rot_matrix);
-    glm_translate_make(move_matrix, transform->position);
+    glm_scale_make(lscale_matrix, transform->scale);
+    glm_euler(transform->rotation, lrot_matrix);
+    glm_translate_make(lmove_matrix, transform->position);
     glm_perspective(cam->fov,
                     (float)CONFIG_WINDOW_WIDTH/CONFIG_WINDOW_HEIGHT,
                     cam->near,
                     cam->far,
-                    proj_matrix);
+                    lproj_matrix);
     vec3 front = {0, 0 ,-1.f};
     vec3 up = {0, 1.f, 0};
     vec3 camDirection, camUp;
-    glm_euler_yxz(camTrans->rotation, cam_rot_matrix);
-    glm_mat4_mulv3(cam_rot_matrix, front, 0, camDirection);
-    glm_mat4_mulv3(cam_rot_matrix, up,0, camUp);
-    glm_look(camTrans->position, camDirection, camUp, lookat_matrix);
-    glm_mat4_mulN((mat4 *[]){&proj_matrix, &lookat_matrix, &move_matrix, &rot_matrix, &scale_matrix}, 5, matrix);
-    glm_mat4_copy(matrix, *result);
+    glm_euler_yxz(camTrans->rotation, lcam_rot_matrix);
+    glm_mat4_mulv3(lcam_rot_matrix, front, 0, camDirection);
+    glm_mat4_mulv3(lcam_rot_matrix, up,0, camUp);
+    glm_look(camTrans->position, camDirection, camUp, llookat_matrix);
+    glm_mat4_copy(lrot_matrix, *rot_matrix);
+    glm_mat4_copy(lmove_matrix, *move_matrix);
+    glm_mat4_copy(lscale_matrix, *scale_matrix);
+    glm_mat4_copy(lproj_matrix, *proj_matrix);
+    glm_mat4_copy(llookat_matrix, *lookat_matrix);
+    glm_mat4_copy(lcam_rot_matrix, *cam_rot_matrix);
     return 0;
 }

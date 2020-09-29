@@ -2,7 +2,12 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
-uniform mat4 transform;
+uniform mat4 rot_matrix;
+uniform mat4 move_matrix;
+uniform mat4 scale_matrix;
+uniform mat4 proj_matrix;
+uniform mat4 lookat_matrix;
+uniform mat4 cam_rot_matrix;
 
 out vec3 normal;
 out vec2 texCoord;
@@ -10,8 +15,8 @@ out vec3 globalLight;
 
 void main()
 {
-    gl_Position = transform * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    gl_Position = proj_matrix * lookat_matrix * move_matrix * rot_matrix * scale_matrix * vec4(aPos.x, aPos.y, aPos.z, 1.0);
     texCoord = aTexCoord;
-    normal = (transform * vec4(aNormal, 0)).xyz;
-    globalLight = (transform*vec4(1, 1, 1, 0)).xyz;
+    normal = (move_matrix * rot_matrix * scale_matrix * vec4(aNormal, 0)).xyz;
+    globalLight = vec3(1, 3, 1);
 }

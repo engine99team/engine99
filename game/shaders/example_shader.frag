@@ -8,7 +8,7 @@ in vec3 globalLight;
 
 void main (void)
 {
-    float mod = dot(normalize(normal), normalize(globalLight));
+    float mod = dot(normalize(normal), normalize(globalLight)) / (length(normal) * length(globalLight));
     vec4 textured = texture(ourTexture, texCoord)*color;
     FragColor = vec4(textured.rgb*mod, 1);
 }
