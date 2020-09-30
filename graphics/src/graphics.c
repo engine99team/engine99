@@ -88,7 +88,12 @@ int create_shader_program(const char* frag_filepath, const char* vert_filepath, 
     glDeleteShader(vert_shader);
     glDeleteShader(frag_shader);
     glUseProgram(local_shader_program);
-    glUniform1i(glGetUniformLocation(local_shader_program, "ourTexture"), 0);
+    glUniform1i(glGetUniformLocation(local_shader_program, "albedoTexture"), 0);
+    glUniform1i(glGetUniformLocation(local_shader_program, "normalTexture"), 1);
+    glUniform1i(glGetUniformLocation(local_shader_program, "heightTexture"), 2);
+    glUniform1i(glGetUniformLocation(local_shader_program, "roughnessTexture"), 3);
+    glUniform1i(glGetUniformLocation(local_shader_program, "metallicTexture"), 4);
+    glUniform1i(glGetUniformLocation(local_shader_program, "aoTexture"), 5);
     ECS_ENTITY(world, shaderProgramEntity, ShaderProgram);
     ecs_set(world, shaderProgramEntity, ShaderProgram, {local_shader_program});
     return 0;
@@ -223,6 +228,7 @@ int load_vertices_to_buffers (const float* vertices, size_t sizeof_vertices,GLui
 }
 
 int use_shader(GLuint shader_program,
+               vec3 camera_position,
                vec4 color,
                mat4 rot_matrix,
                mat4 move_matrix,
@@ -238,6 +244,7 @@ int use_shader(GLuint shader_program,
                GLuint aoTex) {
     glUseProgram(shader_program);
     glUniform4f(glGetUniformLocation(shader_program, "color"), color[0], color[1], color[2], color[3]);
+    glUniform3f(glGetUniformLocation(shader_program, "cameraPos"), camera_position[0], camera_position[1], camera_position[2]);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "rot_matrix"), 1, GL_FALSE, (GLfloat*)rot_matrix);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "move_matrix"), 1, GL_FALSE, (GLfloat*)move_matrix);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "scale_matrix"), 1, GL_FALSE, (GLfloat*)scale_matrix);
@@ -264,7 +271,8 @@ int create_transform_matrix(Transform* transform,   mat4* rot_matrix,
                                                     mat4* scale_matrix,
                                                     mat4* proj_matrix,
                                                     mat4* lookat_matrix,
-                                                    mat4* cam_rot_matrix) {
+                                                    mat4* cam_rot_matrix,
+                                                    vec3* camera_position) {
     mat4 lrot_matrix, lmove_matrix, lscale_matrix, lproj_matrix, llookat_matrix, lcam_rot_matrix;
     Camera* cam;
     Transform* camTrans;
@@ -285,6 +293,7 @@ int create_transform_matrix(Transform* transform,   mat4* rot_matrix,
     vec3 front = {0, 0 ,-1.f};
     vec3 up = {0, 1.f, 0};
     vec3 camDirection, camUp;
+    glm_vec3_copy(camTrans->position, *camera_position);
     glm_euler_yxz(camTrans->rotation, lcam_rot_matrix);
     glm_mat4_mulv3(lcam_rot_matrix, front, 0, camDirection);
     glm_mat4_mulv3(lcam_rot_matrix, up,0, camUp);

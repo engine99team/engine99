@@ -12,14 +12,15 @@ ECS_TYPE_DECLARE(TriangleType);
 
 void render_rectangle(ecs_iter_t* it) {
     mat4 rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
+    vec3 camera_position;
     RectangleMesh* mesh = ecs_column(it, RectangleMesh, 1);
     Transform* transform = ecs_column(it, Transform, 2);
     int i;
     for (i = 0; i < it->count; i++, mesh++, transform++) {
         create_transform_matrix(transform,  &rot_matrix, &move_matrix,
                                             &scale_matrix, &proj_matrix,
-                                            &lookat_matrix, &cam_rot_matrix);
-        use_shader(mesh->shader_program, mesh->color,
+                                            &lookat_matrix, &cam_rot_matrix, &camera_position);
+        use_shader(mesh->shader_program, camera_position, mesh->color,
                    rot_matrix, move_matrix,
                    scale_matrix, proj_matrix,
                    lookat_matrix, cam_rot_matrix,
@@ -35,14 +36,15 @@ void render_rectangle(ecs_iter_t* it) {
 
 void render_triangle(ecs_iter_t* it) {
     mat4 rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
+    vec3 camera_position;
     TriangleMesh* mesh = ecs_column(it, TriangleMesh, 1);
     Transform* transform = ecs_column(it, Transform, 2);
     int i;
     for (i = 0; i < it->count; i++, mesh++, transform++) {
         create_transform_matrix(transform,  &rot_matrix, &move_matrix,
                                 &scale_matrix, &proj_matrix,
-                                &lookat_matrix, &cam_rot_matrix);
-        use_shader(mesh->shader_program, mesh->color,
+                                &lookat_matrix, &cam_rot_matrix, &camera_position);
+        use_shader(mesh->shader_program, camera_position, mesh->color,
                    rot_matrix, move_matrix,
                    scale_matrix, proj_matrix,
                    lookat_matrix, cam_rot_matrix,
@@ -58,14 +60,15 @@ void render_triangle(ecs_iter_t* it) {
 
 void render_cube(ecs_iter_t* it) {
     mat4 rot_matrix, move_matrix, scale_matrix, proj_matrix, lookat_matrix, cam_rot_matrix;
+    vec3 camera_position;
     CubeMesh* mesh = ecs_column(it, CubeMesh, 1);
     Transform* transform = ecs_column(it, Transform, 2);
     int i;
     for (i = 0; i < it->count; i++, mesh++, transform++) {
         create_transform_matrix(transform,  &rot_matrix, &move_matrix,
                                 &scale_matrix, &proj_matrix,
-                                &lookat_matrix, &cam_rot_matrix);
-        use_shader(mesh->shader_program, mesh->color,
+                                &lookat_matrix, &cam_rot_matrix, &camera_position);
+        use_shader(mesh->shader_program, camera_position, mesh->color,
                    rot_matrix, move_matrix,
                    scale_matrix, proj_matrix,
                    lookat_matrix, cam_rot_matrix,

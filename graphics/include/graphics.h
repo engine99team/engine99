@@ -68,7 +68,8 @@ int create_transform_matrix(Transform* transform,   mat4* rot_matrix,
                             mat4* scale_matrix,
                             mat4* proj_matrix,
                             mat4* lookat_matrix,
-                            mat4* cam_rot_matrix);
+                            mat4* cam_rot_matrix,
+                            vec3* camera_position);
 
 /**
  * Loads vertices array to buffers
@@ -81,6 +82,7 @@ int create_transform_matrix(Transform* transform,   mat4* rot_matrix,
 int load_vertices_to_buffers (const float* vertices, size_t sizeof_vertices,GLuint* VAO, GLuint* VBO);
 
 int use_shader(GLuint shader_program,
+               vec3 camera_position,
                vec4 color,
                mat4 rot_matrix,
                mat4 move_matrix,
