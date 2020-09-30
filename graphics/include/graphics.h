@@ -87,6 +87,12 @@ int use_shader(GLuint shader_program,
                mat4 scale_matrix,
                mat4 proj_matrix,
                mat4 lookat_matrix,
-               mat4 cam_rot_matrix);
+               mat4 cam_rot_matrix,
+               GLuint albedoTex,
+               GLuint heightTex,
+               GLuint metallicTex,
+               GLuint normalTex,
+               GLuint roughnessTex,
+               GLuint aoTex);
 
 #endif //ENGINE99_GRAPHICS_H

@@ -229,7 +229,13 @@ int use_shader(GLuint shader_program,
                mat4 scale_matrix,
                mat4 proj_matrix,
                mat4 lookat_matrix,
-               mat4 cam_rot_matrix) {
+               mat4 cam_rot_matrix,
+               GLuint albedoTex,
+               GLuint heightTex,
+               GLuint metallicTex,
+               GLuint normalTex,
+               GLuint roughnessTex,
+               GLuint aoTex) {
     glUseProgram(shader_program);
     glUniform4f(glGetUniformLocation(shader_program, "color"), color[0], color[1], color[2], color[3]);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "rot_matrix"), 1, GL_FALSE, (GLfloat*)rot_matrix);
@@ -238,6 +244,18 @@ int use_shader(GLuint shader_program,
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "proj_matrix"), 1, GL_FALSE, (GLfloat*)proj_matrix);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "lookat_matrix"), 1, GL_FALSE, (GLfloat*)lookat_matrix);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "cam_rot_matrix"), 1, GL_FALSE, (GLfloat*)cam_rot_matrix);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, albedoTex);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, normalTex);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, heightTex);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, roughnessTex);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, metallicTex);
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, aoTex);
     return 0;
 }
 

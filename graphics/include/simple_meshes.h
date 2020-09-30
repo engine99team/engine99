@@ -11,7 +11,13 @@
  */
 typedef struct TriangleMesh {
     vec4 color;
-    GLuint shader_program, VBO, VAO, texture;
+    GLuint shader_program, VBO, VAO;
+    GLuint albedoTex;
+    GLuint heightTex;
+    GLuint metallicTex;
+    GLuint normalTex;
+    GLuint roughnessTex;
+    GLuint aoTex;
 } TriangleMesh;
 
 /**
@@ -19,7 +25,13 @@ typedef struct TriangleMesh {
  */
 typedef struct RectangleMesh {
     vec4 color;
-    GLuint shader_program, VBO, VAO, texture;
+    GLuint shader_program, VBO, VAO;
+    GLuint albedoTex;
+    GLuint heightTex;
+    GLuint metallicTex;
+    GLuint normalTex;
+    GLuint roughnessTex;
+    GLuint aoTex;
 } RectangleMesh;
 
 /**
@@ -27,7 +39,13 @@ typedef struct RectangleMesh {
  */
 typedef struct CubeMesh {
     vec4 color;
-    GLuint shader_program, VBO, VAO, texture;
+    GLuint shader_program, VBO, VAO;
+    GLuint albedoTex;
+    GLuint heightTex;
+    GLuint metallicTex;
+    GLuint normalTex;
+    GLuint roughnessTex;
+    GLuint aoTex;
 } CubeMesh;
 
 ECS_COMPONENT_EXTERN(TriangleMesh);
@@ -51,7 +69,14 @@ int init_simple_meshes(void);
  * @param transform transform component
  * @return zero if there is no problems
  */
-int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform);
+int create_rectangle(GLuint shader_program,
+                     const Transform* transform,
+                     GLuint albedoTex,
+                     GLuint heightTex,
+                     GLuint metallicTex,
+                     GLuint normalTex,
+                     GLuint roughnessTex,
+                     GLuint aoTex);
 
 /**
  * Creates triangle mesh entity
@@ -60,7 +85,14 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
  * @param transform transform component
  * @return zero if there is no problems
  */
-int create_triangle(GLuint shader_program, GLuint texture, const Transform* transform);
+int create_triangle(GLuint shader_program,
+                    const Transform* transform,
+                    GLuint albedoTex,
+                    GLuint heightTex,
+                    GLuint metallicTex,
+                    GLuint normalTex,
+                    GLuint roughnessTex,
+                    GLuint aoTex);
 
 /**
  * Creates cube mesh entity
@@ -69,6 +101,13 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
  * @param transform transform component
  * @return zero if there is no problems
  */
-int create_cube(GLuint shader_program, GLuint texture, const Transform* transform);
+int create_cube(GLuint shader_program,
+                const Transform* transform,
+                GLuint albedoTex,
+                GLuint heightTex,
+                GLuint metallicTex,
+                GLuint normalTex,
+                GLuint roughnessTex,
+                GLuint aoTex);
 
 #endif //ENGINE99_SIMPLE_MESHES_H

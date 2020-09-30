@@ -9,7 +9,13 @@
  */
 typedef struct Mesh {
     vec4 color;
-    GLuint shader_program, VBO, VAO, texture;
+    GLuint shader_program, VBO, VAO;
+    GLuint albedoTex;
+    GLuint heightTex;
+    GLuint metallicTex;
+    GLuint normalTex;
+    GLuint roughnessTex;
+    GLuint aoTex;
     uint32_t num_triangles;
 } Mesh;
 
@@ -40,9 +46,14 @@ int set_mesh_component(ecs_entity_t entity,
                        GLuint VAO,
                        GLuint VBO,
                        GLuint shader_program,
-                       GLuint texture,
                        vec4 color,
-                       uint32_t num_triangles);
+                       uint32_t num_triangles,
+                       GLuint albedoTex,
+                       GLuint heightTex,
+                       GLuint metallicTex,
+                       GLuint normalTex,
+                       GLuint roughnessTex,
+                       GLuint aoTex);
 
 /**
  * Init Mesh component and systems

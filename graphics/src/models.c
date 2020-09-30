@@ -23,9 +23,10 @@ void render_mesh(ecs_iter_t* it) {
         use_shader(mesh->shader_program, mesh->color,
                    rot_matrix, move_matrix,
                    scale_matrix, proj_matrix,
-                   lookat_matrix, cam_rot_matrix);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mesh->texture);
+                   lookat_matrix, cam_rot_matrix,
+                   mesh->albedoTex, mesh->heightTex,
+                   mesh->metallicTex, mesh->normalTex,
+                   mesh->roughnessTex, mesh->aoTex);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindVertexArray(mesh->VAO);
@@ -110,15 +111,25 @@ int set_mesh_component(ecs_entity_t entity,
                        GLuint VAO,
                        GLuint VBO,
                        GLuint shader_program,
-                       GLuint texture,
                        vec4 color,
-                       uint32_t num_triangles) {
+                       uint32_t num_triangles,
+                       GLuint albedoTex,
+                       GLuint heightTex,
+                       GLuint metallicTex,
+                       GLuint normalTex,
+                       GLuint roughnessTex,
+                       GLuint aoTex) {
     ecs_add(world, entity, Mesh);
     ecs_set(world, entity, Mesh, {
         .VAO = VAO,
         .VBO = VBO,
         .shader_program = shader_program,
-        .texture = texture,
+        .albedoTex = albedoTex,
+        .heightTex = heightTex,
+        .metallicTex = metallicTex,
+        .normalTex = normalTex,
+        .roughnessTex = roughnessTex,
+        .aoTex = aoTex,
         .color = {color[0], color[1], color[2], color[3]},
         .num_triangles = num_triangles
     });

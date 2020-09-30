@@ -237,9 +237,10 @@ void example_imgui_fps(ecs_iter_t* it) {
 }
 
 int init_example(void) {
-    GLuint example_texture, shader_program;
+    GLuint shader_program;
     GLuint model_VAO, model_VBO;
     uint32_t model_triangles;
+    GLuint albedo_texture, height_texture, metallic_texture, normal_texture, roughness_texture, ao_texture;
     ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag)
     ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
@@ -247,19 +248,31 @@ int init_example(void) {
     ECS_SYSTEM(world, example_imgui_cube, imgui_stage, CubeMesh)
     ECS_SYSTEM(world, camera_movement, update_stage, Camera, Transform)
     create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
-    load_png_texture("textures/test.png", &example_texture);
+    load_png_texture("textures/scuffed-metal1_albedo.png", &albedo_texture);
+    load_png_texture("textures/scuffed-metal1_height.png", &height_texture);
+    load_png_texture("textures/scuffed-metal1_metallic.png", &metallic_texture);
+    load_png_texture("textures/scuffed-metal1_normal-ogl.png", &normal_texture);
+    load_png_texture("textures/scuffed-metal1_roughness.png", &roughness_texture);
+    load_png_texture("textures/scuffed-metal1_ao.png", &ao_texture);
+
     Transform transform1 = {
                 .position = {0, 0.1f, -2.f},
                 .rotation = {-CGLM_PI / 3, -CGLM_PI / 3, 0},
                 .scale = {1, 1, 1}
             };
-    create_cube(shader_program, example_texture, &transform1);
+    create_cube(shader_program, &transform1,
+                albedo_texture, height_texture,
+                metallic_texture, normal_texture,
+                roughness_texture, ao_texture);
     Transform transform2 = {
             .position = {0, 0.1f, 0.f},
             .rotation = {CGLM_PI / 3, -CGLM_PI / 3, 0},
             .scale = {1, 1, 1}
     };
-    create_cube(shader_program, example_texture, &transform2);
+    create_cube(shader_program, &transform2,
+                albedo_texture, height_texture,
+                metallic_texture, normal_texture,
+                roughness_texture, ao_texture);
 
     load_model("models/test.obj", &model_VAO, &model_VBO, &model_triangles);
     ecs_entity_t model = ecs_new(world, 0);
@@ -270,7 +283,12 @@ int init_example(void) {
         .scale = {1, 1, 1}
     });
     vec4 color = {1, 1, 1, 1};
-    set_mesh_component(model, model_VAO, model_VBO, shader_program, example_texture, color, model_triangles);
+    set_mesh_component(model, model_VAO,
+                       model_VBO, shader_program,
+                       color, model_triangles,
+                       albedo_texture, height_texture,
+                       metallic_texture, normal_texture,
+                       roughness_texture, ao_texture);
     return 0;
 }
 

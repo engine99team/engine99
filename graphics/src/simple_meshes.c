@@ -22,9 +22,10 @@ void render_rectangle(ecs_iter_t* it) {
         use_shader(mesh->shader_program, mesh->color,
                    rot_matrix, move_matrix,
                    scale_matrix, proj_matrix,
-                   lookat_matrix, cam_rot_matrix);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mesh->texture);
+                   lookat_matrix, cam_rot_matrix,
+                   mesh->albedoTex, mesh->heightTex,
+                   mesh->metallicTex, mesh->normalTex,
+                   mesh->roughnessTex, mesh->aoTex);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindVertexArray(mesh->VAO);
@@ -44,9 +45,10 @@ void render_triangle(ecs_iter_t* it) {
         use_shader(mesh->shader_program, mesh->color,
                    rot_matrix, move_matrix,
                    scale_matrix, proj_matrix,
-                   lookat_matrix, cam_rot_matrix);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mesh->texture);
+                   lookat_matrix, cam_rot_matrix,
+                   mesh->albedoTex, mesh->heightTex,
+                   mesh->metallicTex, mesh->normalTex,
+                   mesh->roughnessTex, mesh->aoTex);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindVertexArray(mesh->VAO);
@@ -66,9 +68,10 @@ void render_cube(ecs_iter_t* it) {
         use_shader(mesh->shader_program, mesh->color,
                    rot_matrix, move_matrix,
                    scale_matrix, proj_matrix,
-                   lookat_matrix, cam_rot_matrix);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mesh->texture);
+                   lookat_matrix, cam_rot_matrix,
+                   mesh->albedoTex, mesh->heightTex,
+                   mesh->metallicTex, mesh->normalTex,
+                   mesh->roughnessTex, mesh->aoTex);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindVertexArray(mesh->VAO);
@@ -103,7 +106,14 @@ void delete_cube(ecs_iter_t* it) {
     }
 }
 
-int create_triangle(GLuint shader_program, GLuint texture, const Transform* transform) {
+int create_triangle(GLuint shader_program,
+                    const Transform* transform,
+                    GLuint albedoTex,
+                    GLuint heightTex,
+                    GLuint metallicTex,
+                    GLuint normalTex,
+                    GLuint roughnessTex,
+                    GLuint aoTex) {
     GLuint VBO, VAO;
     float triangle_vertices[] = {
             -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
@@ -117,7 +127,12 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
         .shader_program = shader_program,
         .VBO = VBO,
         .VAO = VAO,
-        .texture = texture});
+        .albedoTex = albedoTex,
+        .heightTex = heightTex,
+        .metallicTex = metallicTex,
+        .normalTex = normalTex,
+        .roughnessTex = roughnessTex,
+        .aoTex = aoTex});
     ecs_set(world, triangleEntity, Transform, {
         .position = {transform->position[0], transform->position[1], transform->position[2]},
         .rotation = {transform->rotation[0], transform->rotation[1], transform->rotation[2]},
@@ -126,7 +141,14 @@ int create_triangle(GLuint shader_program, GLuint texture, const Transform* tran
     return 0;
 }
 
-int create_rectangle(GLuint shader_program, GLuint texture, const Transform* transform) {
+int create_rectangle(GLuint shader_program,
+                     const Transform* transform,
+                     GLuint albedoTex,
+                     GLuint heightTex,
+                     GLuint metallicTex,
+                     GLuint normalTex,
+                     GLuint roughnessTex,
+                     GLuint aoTex) {
     GLuint VBO, VAO;
     // Rectangle
     float rect_vertices[] = {
@@ -144,7 +166,12 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
                                                     .shader_program = shader_program,
                                                     .VBO = VBO,
                                                     .VAO = VAO,
-                                                    .texture = texture});
+                                                    .albedoTex = albedoTex,
+                                                    .heightTex = heightTex,
+                                                    .metallicTex = metallicTex,
+                                                    .normalTex = normalTex,
+                                                    .roughnessTex = roughnessTex,
+                                                    .aoTex = aoTex});
     ecs_set(world, rectangleEntity, Transform, {
         .position = {transform->position[0], transform->position[1], transform->position[2]},
         .rotation = {transform->rotation[0], transform->rotation[1], transform->rotation[2]},
@@ -153,7 +180,14 @@ int create_rectangle(GLuint shader_program, GLuint texture, const Transform* tra
     return 0;
 }
 
-int create_cube(GLuint shader_program, GLuint texture, const Transform* transform) {
+int create_cube(GLuint shader_program,
+                const Transform* transform,
+                GLuint albedoTex,
+                GLuint heightTex,
+                GLuint metallicTex,
+                GLuint normalTex,
+                GLuint roughnessTex,
+                GLuint aoTex) {
     GLuint VBO, VAO;
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,    0.0f, 0.0f,
@@ -205,7 +239,12 @@ int create_cube(GLuint shader_program, GLuint texture, const Transform* transfor
         .shader_program = shader_program,
         .VBO = VBO,
         .VAO = VAO,
-        .texture = texture});
+        .albedoTex = albedoTex,
+        .heightTex = heightTex,
+        .metallicTex = metallicTex,
+        .normalTex = normalTex,
+        .roughnessTex = roughnessTex,
+        .aoTex = aoTex});
     ecs_set(world, cubeEntity, Transform, {
         .position = {transform->position[0], transform->position[1], transform->position[2]},
         .rotation = {transform->rotation[0], transform->rotation[1], transform->rotation[2]},

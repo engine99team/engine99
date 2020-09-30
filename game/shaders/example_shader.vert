@@ -9,14 +9,17 @@ uniform mat4 proj_matrix;
 uniform mat4 lookat_matrix;
 uniform mat4 cam_rot_matrix;
 
-out vec3 normal;
-out vec2 texCoord;
+out vec3 faceNormal; // In global coords
+out vec2 texCoord;   //
 out vec3 globalLight;
+out vec3 globalPos;  // position in global coords
+//out mat4
 
 void main()
 {
     gl_Position = proj_matrix * lookat_matrix * move_matrix * rot_matrix * scale_matrix * vec4(aPos.x, aPos.y, aPos.z, 1.0);
     texCoord = aTexCoord;
-    normal = (move_matrix * rot_matrix * scale_matrix * vec4(aNormal, 0)).xyz;
+    globalPos = (move_matrix * rot_matrix * scale_matrix * vec4(aPos.x, aPos.y, aPos.z, 1.0)).xyz;
+    faceNormal = (move_matrix * rot_matrix * scale_matrix * vec4(aNormal, 0)).xyz;
     globalLight = vec3(1, 3, 1);
 }
