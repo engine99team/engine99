@@ -248,7 +248,7 @@ int init_example(void) {
     ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
     ECS_SYSTEM(world, example_imgui_cube, imgui_stage, CubeMesh)
     ECS_SYSTEM(world, camera_movement, update_stage, Camera, Transform)
-    create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
+    create_shader_program("shaders/pbr.frag", "shaders/pbr.vert", &shader_program);
     load_png_texture("textures/scuffed-metal1_albedo.png", &albedo_texture);
     load_png_texture("textures/scuffed-metal1_height.png", &height_texture);
     load_png_texture("textures/scuffed-metal1_metallic.png", &metallic_texture);
