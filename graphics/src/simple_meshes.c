@@ -1,6 +1,7 @@
 #include "simple_meshes.h"
 #include "globals.h"
 #include "stages.h"
+#include "models.h"
 
 ECS_COMPONENT_DECLARE(TriangleMesh);
 ECS_COMPONENT_DECLARE(RectangleMesh);
@@ -192,50 +193,8 @@ int create_cube(GLuint shader_program,
                 GLuint roughnessTex,
                 GLuint aoTex) {
     GLuint VBO, VAO;
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,    0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,    0.0f, 0.0f, -1.0f,    1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,    0.0f, 0.0f, -1.0f,    1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,    0.0f, 0.0f, -1.0f,    1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f, -1.0f,    0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, -1.0f,    0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,      0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,    0.0f, 0.0f, 1.0f,      1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,    0.0f, 0.0f, 1.0f,      1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,    0.0f, 0.0f, 1.0f,      1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,      0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,      0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,   -1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,   -1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,   -1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,   -1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-
-        0.5f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,     1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,     1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,     1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,     1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f, 0.0f,    0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,     0.0f, -1.0f, 0.0f,    1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,     0.0f, -1.0f, 0.0f,    1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,     0.0f, -1.0f, 0.0f,    1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,    0.0f, -1.0f, 0.0f,    0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,    0.0f, -1.0f, 0.0f,    0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,     0.0f, 1.0f, 0.0f,     1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f, 0.0f,     0.0f, 1.0f
-    };
-    load_vertices_to_buffers(vertices, sizeof(vertices), &VAO, &VBO);
+    uint32_t num_triangles;
+    load_model("models/cube.obj", &VAO, &VBO, &num_triangles);
     ecs_entity_t cubeEntity = ecs_new(world, CubeType);
     ecs_set(world, cubeEntity, CubeMesh, {
         .color = {1.0f, 1.0f, 1.0f, 1.f},

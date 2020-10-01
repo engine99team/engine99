@@ -5,6 +5,8 @@
 
 ECS_COMPONENT_DECLARE(Mesh);
 
+static GLuint emptyTexture;
+
 void delete_mesh(ecs_iter_t* it) {
     Mesh* mesh = ecs_column(it, Mesh, 0);
     glDeleteBuffers(1, &mesh->VBO);
@@ -170,6 +172,25 @@ int set_mesh_component(ecs_entity_t entity,
                        GLuint roughnessTex,
                        GLuint aoTex) {
     ecs_add(world, entity, Mesh);
+    if (albedoTex == 0) {
+        albedoTex = emptyTexture;
+    }
+    if (heightTex == 0) {
+        heightTex = emptyTexture;
+    }
+    if (metallicTex == 0) {
+        metallicTex = emptyTexture;
+    }
+    if (normalTex == 0) {
+        normalTex = emptyTexture;
+    }
+    if (roughnessTex == 0) {
+        roughnessTex = emptyTexture;
+    }
+    if (aoTex == 0) {
+        aoTex = emptyTexture;
+    }
+
     ecs_set(world, entity, Mesh, {
         .VAO = VAO,
         .VBO = VBO,
@@ -190,4 +211,9 @@ int init_models (void) {
     ECS_COMPONENT_DEFINE(world, Mesh);
     ECS_TRIGGER(world, delete_mesh, EcsOnRemove, Mesh);
     ECS_SYSTEM(world, render_mesh, render_stage, Mesh, Transform);
+    glGenTextures(1, &emptyTexture);
+    GLubyte data[] = { 255, 255, 255, 255 };
+    glBindTexture(GL_TEXTURE_2D, emptyTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
