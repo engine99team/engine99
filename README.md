@@ -32,14 +32,14 @@ imgui, flecs as ECS framework.
     * [x] load 3d models
     * [x] render simple shapes
     * [x] render 3d models
-    * [ ] normals
-    * [ ] lightning
+    * [x] normals
+    * [ ] lighting
       * [ ] point light
       * [ ] directional light
       * [ ] spot light
       * [ ] lightmaps
       * [ ] shadows
-    * [ ] PBR shading
+    * [x] PBR shading
   * [x] input
   * [ ] physics 
   * [ ] sound system 

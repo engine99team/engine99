@@ -255,30 +255,30 @@ int init_example(void) {
     load_png_texture("textures/scuffed-metal1_roughness.png", &roughness_texture);
     load_png_texture("textures/scuffed-metal1_ao.png", &ao_texture);
 
-    Transform transform1 = {
-                .position = {0, 0.1f, -2.f},
-                .rotation = {-CGLM_PI / 3, -CGLM_PI / 3, 0},
-                .scale = {1, 1, 1}
-            };
-    create_cube(shader_program, &transform1,
-                albedo_texture, height_texture,
-                metallic_texture, normal_texture,
-                roughness_texture, ao_texture);
-    Transform transform2 = {
-            .position = {0, 0.1f, 0.f},
-            .rotation = {CGLM_PI / 3, -CGLM_PI / 3, 0},
-            .scale = {1, 1, 1}
-    };
-    create_cube(shader_program, &transform2,
-                albedo_texture, height_texture,
-                metallic_texture, normal_texture,
-                roughness_texture, ao_texture);
+//    Transform transform1 = {
+//                .position = {0, 0.1f, -2.f},
+//                .rotation = {-CGLM_PI / 3, -CGLM_PI / 3, 0},
+//                .scale = {1, 1, 1}
+//            };
+//    create_cube(shader_program, &transform1,
+//                albedo_texture, height_texture,
+//                metallic_texture, normal_texture,
+//                roughness_texture, ao_texture);
+//    Transform transform2 = {
+//            .position = {0, 0.1f, 0.f},
+//            .rotation = {CGLM_PI / 3, -CGLM_PI / 3, 0},
+//            .scale = {1, 1, 1}
+//    };
+//    create_cube(shader_program, &transform2,
+//                albedo_texture, height_texture,
+//                metallic_texture, normal_texture,
+//                roughness_texture, ao_texture);
 
     load_model("models/test.obj", &model_VAO, &model_VBO, &model_triangles);
     ecs_entity_t model = ecs_new(world, 0);
     ecs_add(world, model, Transform);
     ecs_set(world, model, Transform, {
-        .position = {0, 2.0f, 0.f},
+        .position = {0, 0.0f, 0.f},
         .rotation = {0, 0, 0},
         .scale = {1, 1, 1}
     });

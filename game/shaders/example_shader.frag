@@ -20,6 +20,7 @@ in vec2 texCoord;
 in vec3 faceNormal;
 in vec3 globalLight;
 in vec3 globalPos;
+in mat3 tangentBasis;
 
 // GGX/Towbridge-Reitz normal distribution function.
 // Uses Disney's reparametrization of alpha = roughness^2.
@@ -59,8 +60,9 @@ void main (void)
     vec3 albedo = (texture(albedoTexture, texCoord)*color).rgb;
     float metallic = texture(metallicTexture, texCoord).r;
     float roughness = texture(roughnessTexture, texCoord).r;
-    vec3 normal = faceNormal;//texture(normalTexture, texCoord).rgb;
-    //normal = normalize(normal * 2.0 - 1.0);
+    vec3 normal = texture(normalTexture, texCoord).rgb;
+    normal = normalize(normal * 2.0 - 1.0);
+    normal = normalize(tangentBasis * normal);
 
     vec3 Lo = normalize(cameraPos - globalPos);
     float cosLo = max(0.0, dot(normal, Lo));
@@ -70,7 +72,7 @@ void main (void)
     vec3 directLighting = vec3(0);
     // foreach Light
     vec3 Li = -normalize(globalLight);
-    vec3 Lradiance = vec3(1, 1, 1);
+    vec3 Lradiance = vec3(1, 1, 1) * 2;
     vec3 Lh = normalize(Li + Lo);
     float cosLi = max(0.0, dot(normal, Li));
     float cosLh = max(0.0, dot(normal, Lh));

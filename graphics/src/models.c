@@ -78,24 +78,73 @@ int load_model(const char* filename, GLuint* VAO, GLuint* VBO, uint32_t* num_tri
         return 1;
     }
 
-    float vertices[attrib.num_face_num_verts * 24];
+    float vertices[attrib.num_face_num_verts * 42];
 
     //for each face
     for (i = 0; i < attrib.num_face_num_verts; i++) {
-        float* face = vertices + 24 * i;
+        vec3 tangent;
+        vec3 bitangent;
+        vec3 edge1;
+        vec3 edge2;
+        vec2 deltaUV1;
+        vec2 deltaUV2;
+        float* face = vertices + 42 * i;
         tinyobj_vertex_index_t* idx = attrib.faces + i*3;
+        vec3 pos1 = {attrib.vertices[idx[0].v_idx*3],
+                     attrib.vertices[idx[0].v_idx*3+1],
+                     attrib.vertices[idx[0].v_idx*3+2]};
+        vec3 pos2 = {attrib.vertices[idx[1].v_idx*3],
+                     attrib.vertices[idx[1].v_idx*3+1],
+                     attrib.vertices[idx[1].v_idx*3+2]};
+        vec3 pos3 = {attrib.vertices[idx[2].v_idx*3],
+                     attrib.vertices[idx[2].v_idx*3+1],
+                     attrib.vertices[idx[2].v_idx*3+2]};
+
+        vec2 uv1 = {attrib.texcoords[idx[0].vt_idx*2],
+                    attrib.texcoords[idx[0].vt_idx*2+1]};
+        vec2 uv2 = {attrib.texcoords[idx[1].vt_idx*2],
+                    attrib.texcoords[idx[1].vt_idx*2+1]};
+        vec2 uv3 = {attrib.texcoords[idx[2].vt_idx*2],
+                    attrib.texcoords[idx[2].vt_idx*2+1]};
+
+        glm_vec3_sub(pos2, pos1, edge1);
+        glm_vec3_sub(pos3, pos1, edge2);
+        glm_vec3_sub(uv2, uv1, deltaUV1);
+        glm_vec3_sub(uv3, uv1, deltaUV2);
+
+        float f = 1.0f / (deltaUV1[0] * deltaUV2[1] - deltaUV2[0] * deltaUV1[1]);
+        tangent[0] = f * (deltaUV2[1] * edge1[0] - deltaUV1[1] * edge2[0]);
+        tangent[1] = f * (deltaUV2[1] * edge1[1] - deltaUV1[1] * edge2[1]);
+        tangent[2] = f * (deltaUV2[1] * edge1[2] - deltaUV1[1] * edge2[2]);
+        glm_normalize(tangent);
+
+        bitangent[0] = f * (-deltaUV2[0] * edge1[0] + deltaUV1[0] * edge2[0]);
+        bitangent[1] = f * (-deltaUV2[0] * edge1[1] + deltaUV1[0] * edge2[1]);
+        bitangent[2] = f * (-deltaUV2[0] * edge1[2] + deltaUV1[0] * edge2[2]);
+        glm_normalize(bitangent);
+
         //for each vertex
         for (j = 0; j < 3; j++) {
-            float* vertex = face + j*8;
+            float* vertex = face + j*14;
             tinyobj_vertex_index_t idxj = idx[j];
             vertex[0] = attrib.vertices[idxj.v_idx*3];
             vertex[1] = attrib.vertices[idxj.v_idx*3 + 1];
             vertex[2] = attrib.vertices[idxj.v_idx*3 + 2];
+
             vertex[3] = attrib.normals[idxj.vn_idx*3];
             vertex[4] = attrib.normals[idxj.vn_idx*3 + 1];
             vertex[5] = attrib.normals[idxj.vn_idx*3 + 2];
-            vertex[6] = attrib.texcoords[idxj.vt_idx*2];
-            vertex[7] = attrib.texcoords[idxj.vt_idx*2 + 1];
+
+            vertex[6] = tangent[0];
+            vertex[7] = tangent[1];
+            vertex[8] = tangent[2];
+
+            vertex[9] =  bitangent[0];
+            vertex[10] = bitangent[1];
+            vertex[11] = bitangent[2];
+
+            vertex[12] = attrib.texcoords[idxj.vt_idx*2];
+            vertex[13] = attrib.texcoords[idxj.vt_idx*2 + 1];
         }
     }
     load_vertices_to_buffers(vertices, sizeof(vertices), &lVAO, &lVBO);
