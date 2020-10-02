@@ -1,6 +1,7 @@
 #include "graphics.h"
 #include <log.h>
 #include <stdlib.h>
+#include "light.h"
 #include "graphics_components.h"
 
 int get_size_of_file(const char* filepath, int32_t* file_size) {
@@ -255,6 +256,7 @@ int use_shader(GLuint shader_program,
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "proj_matrix"), 1, GL_FALSE, (GLfloat*)proj_matrix);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "lookat_matrix"), 1, GL_FALSE, (GLfloat*)lookat_matrix);
     glUniformMatrix4fv(glGetUniformLocation(shader_program, "cam_rot_matrix"), 1, GL_FALSE, (GLfloat*)cam_rot_matrix);
+    load_lights(shader_program);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, albedoTex);
     glActiveTexture(GL_TEXTURE1);

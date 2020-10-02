@@ -6,6 +6,7 @@
 #include "simple_meshes.h"
 #include "core_components.h"
 #include "graphics_components.h"
+#include "light.h"
 #include <log.h>
 #include <models.h>
 
@@ -224,14 +225,40 @@ void example_imgui_tri (ecs_iter_t* it) {
 }
 
 void example_imgui_fps(ecs_iter_t* it) {
+    Transform* camTrans;
+    ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
+    ecs_iter_t it1 = ecs_query_iter(query);
+    while (ecs_query_next(&it1)) {
+        camTrans = ecs_column(&it1, Transform, 2);
+    }
     if (nk_begin(nk_ctx, "FPS counter", nk_rect(280, 300, 230, 100),
                  NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_TITLE)) {
-        char buffer[10];
+        char buffer[50];
         float dt = it->delta_system_time;
         float fps = 1.0f/dt;
-        sprintf(buffer, "%.2f", fps);
+        sprintf(buffer, "fps: %.2f\npos: %.2f %.2f %.2f", fps,
+                camTrans->position[0],
+                camTrans->position[1],
+                camTrans->position[2]);
         nk_layout_row_dynamic(nk_ctx, 20, 1);
         nk_label(nk_ctx, buffer, NK_TEXT_ALIGN_LEFT);
+    }
+    nk_end(nk_ctx);
+}
+
+void test_spotlight(ecs_iter_t* it) {
+    SpotLight* spotLight = ecs_column(it, SpotLight, 1);
+    Transform* transform = ecs_column(it, Transform, 2);
+    if (nk_begin(nk_ctx, "Spotlight", nk_rect(280, 400, 230, 400),
+                 NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_TITLE)) {
+        nk_layout_row_dynamic(nk_ctx, 25, 1);
+        nk_property_float(nk_ctx, "posx", -3.f, &transform->position[0], 3.0f, 0.01f, 0.005f);
+        nk_layout_row_dynamic(nk_ctx, 25, 1);
+        nk_property_float(nk_ctx, "posy", -3.f, &transform->position[1], 3.0f, 0.01f, 0.005f);
+        nk_layout_row_dynamic(nk_ctx, 25, 1);
+        nk_property_float(nk_ctx, "posz", -3.f, &transform->position[2], 3.0f, 0.01f, 0.005f);
+        nk_layout_row_dynamic(nk_ctx, 25, 1);
+        nk_property_float(nk_ctx, "angle", -2.f, &spotLight->angle, 2.0f, 0.01f, 0.01f);
     }
     nk_end(nk_ctx);
 }
@@ -242,13 +269,14 @@ int init_example(void) {
     uint32_t model_triangles;
     GLuint albedo_texture, height_texture, metallic_texture, normal_texture, roughness_texture, ao_texture;
     GLuint albedo_texture1, metallic_texture1, normal_texture1, roughness_texture1;
-    ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag)
-    ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag)
-    ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh)
-    ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh)
-    ECS_SYSTEM(world, example_imgui_cube, imgui_stage, CubeMesh)
-    ECS_SYSTEM(world, camera_movement, update_stage, Camera, Transform)
-    create_shader_program("shaders/pbr.frag", "shaders/pbr.vert", &shader_program);
+    ECS_SYSTEM(world, example_imgui, imgui_stage, global_tag);
+    ECS_SYSTEM(world, example_imgui_fps, imgui_stage, global_tag);
+    ECS_SYSTEM(world, example_imgui_rect, imgui_stage, RectangleMesh);
+    ECS_SYSTEM(world, example_imgui_tri, imgui_stage, TriangleMesh);
+    ECS_SYSTEM(world, example_imgui_cube, imgui_stage, CubeMesh);
+    ECS_SYSTEM(world, camera_movement, update_stage, Camera, Transform);
+    ECS_SYSTEM(world, test_spotlight, update_stage, SpotLight, Transform);
+    create_shader_program("shaders/example_shader.frag", "shaders/example_shader.vert", &shader_program);
     load_png_texture("textures/scuffed-metal1_albedo.png", &albedo_texture);
     load_png_texture("textures/scuffed-metal1_height.png", &height_texture);
     load_png_texture("textures/scuffed-metal1_metallic.png", &metallic_texture);
@@ -271,7 +299,7 @@ int init_example(void) {
                 metallic_texture, normal_texture,
                 roughness_texture, ao_texture);
     Transform transform2 = {
-            .position = {0, 0.1f, 0.f},
+            .position = {0, 0.0f, 0.f},
             .rotation = {CGLM_PI / 3, -CGLM_PI / 3, 0},
             .scale = {1, 1, 1}
     };
@@ -308,6 +336,32 @@ int init_example(void) {
                        albedo_texture1, 0,
                        metallic_texture1, normal_texture1,
                        roughness_texture1, 0);
+//    ecs_entity_t point_light = ecs_new(world, 0);
+//    ecs_add(world, point_light, PointLight);
+//    ecs_set(world, point_light, PointLight, {
+//       .radiance = {2.f, 2.f, 2.f}
+//    });
+//    ecs_add(world, point_light, Transform);
+//    ecs_set(world, point_light, Transform, {
+//        .position = {0.f, -2.f, 0.f}
+//    });
+//    ecs_entity_t direct_light = ecs_new(world, 0);
+//    ecs_add(world, direct_light, DirectLight);
+//    ecs_set(world, direct_light, DirectLight, {
+//        .direction = {-1.f, -1.f, -1.f},
+//        .radiance = {2.f, 2.f, 2.f}
+//    });
+    ecs_entity_t spot_light = ecs_new(world, 0);
+    ecs_add(world, spot_light, SpotLight);
+    ecs_set(world, spot_light, SpotLight, {
+        .direction = {0.f, 0.f, -1.f},
+        .radiance = {2.f, 2.f, 2.f},
+        .angle = M_PI_4
+    });
+    ecs_add(world, spot_light, Transform);
+    ecs_set(world, spot_light, Transform, {
+        .position = {0, 0.f, 2.f}
+    });
     return 0;
 }
 

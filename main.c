@@ -9,6 +9,7 @@
 #include "window.h"
 #include "events.h"
 #include "globals.h"
+#include "light.h"
 #include "game.h"
 #include "stages.h"
 #include "core_components.h"
@@ -40,6 +41,7 @@ int main() {
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
     init_stages();
+    init_lights();
     init_core_components();
     init_graphics_components();
     init_simple_meshes();

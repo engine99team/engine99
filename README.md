@@ -34,8 +34,8 @@ imgui, flecs as ECS framework.
     * [x] render 3d models
     * [x] normals
     * [ ] lighting
-      * [ ] point light
-      * [ ] directional light
+      * [x] point light
+      * [x] directional light
       * [ ] spot light
       * [ ] lightmaps
       * [ ] shadows
