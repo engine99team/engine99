@@ -97,4 +97,6 @@ int use_shader(GLuint shader_program,
                GLuint roughnessTex,
                GLuint aoTex);
 
+int init_graphics (void);
+
 #endif //ENGINE99_GRAPHICS_H

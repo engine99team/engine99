@@ -4,6 +4,8 @@
 #include "light.h"
 #include "graphics_components.h"
 
+static ecs_query_t *cameraQuery;
+
 int get_size_of_file(const char* filepath, int32_t* file_size) {
     FILE* file = fopen(filepath, "rb");
     if (file == NULL) {
@@ -280,35 +282,37 @@ int create_transform_matrix(Transform* transform,   mat4* rot_matrix,
                                                     mat4* cam_rot_matrix,
                                                     vec3* camera_position) {
     mat4 lrot_matrix, lmove_matrix, lscale_matrix, lproj_matrix, llookat_matrix, lcam_rot_matrix;
-    Camera* cam;
-    Transform* camTrans;
-    ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
-    ecs_iter_t it = ecs_query_iter(query);
+    ecs_iter_t it = ecs_query_iter(cameraQuery);
     while (ecs_query_next(&it)) {
-        cam = ecs_column(&it, Camera, 1);
-        camTrans = ecs_column(&it, Transform, 2);
+        Camera* cam = ecs_column(&it, Camera, 1);
+        Transform* camTrans = ecs_column(&it, Transform, 2);
+        glm_scale_make(lscale_matrix, transform->scale);
+        glm_euler(transform->rotation, lrot_matrix);
+        glm_translate_make(lmove_matrix, transform->position);
+        glm_perspective(cam->fov,
+                        (float)CONFIG_WINDOW_WIDTH/CONFIG_WINDOW_HEIGHT,
+                        cam->near,
+                        cam->far,
+                        lproj_matrix);
+        vec3 front = {0, 0 ,-1.f};
+        vec3 up = {0, 1.f, 0};
+        vec3 camDirection, camUp;
+        glm_vec3_copy(camTrans->position, *camera_position);
+        glm_euler_yxz(camTrans->rotation, lcam_rot_matrix);
+        glm_mat4_mulv3(lcam_rot_matrix, front, 0, camDirection);
+        glm_mat4_mulv3(lcam_rot_matrix, up,0, camUp);
+        glm_look(camTrans->position, camDirection, camUp, llookat_matrix);
+        glm_mat4_copy(lrot_matrix, *rot_matrix);
+        glm_mat4_copy(lmove_matrix, *move_matrix);
+        glm_mat4_copy(lscale_matrix, *scale_matrix);
+        glm_mat4_copy(lproj_matrix, *proj_matrix);
+        glm_mat4_copy(llookat_matrix, *lookat_matrix);
+        glm_mat4_copy(lcam_rot_matrix, *cam_rot_matrix);
     }
-    glm_scale_make(lscale_matrix, transform->scale);
-    glm_euler(transform->rotation, lrot_matrix);
-    glm_translate_make(lmove_matrix, transform->position);
-    glm_perspective(cam->fov,
-                    (float)CONFIG_WINDOW_WIDTH/CONFIG_WINDOW_HEIGHT,
-                    cam->near,
-                    cam->far,
-                    lproj_matrix);
-    vec3 front = {0, 0 ,-1.f};
-    vec3 up = {0, 1.f, 0};
-    vec3 camDirection, camUp;
-    glm_vec3_copy(camTrans->position, *camera_position);
-    glm_euler_yxz(camTrans->rotation, lcam_rot_matrix);
-    glm_mat4_mulv3(lcam_rot_matrix, front, 0, camDirection);
-    glm_mat4_mulv3(lcam_rot_matrix, up,0, camUp);
-    glm_look(camTrans->position, camDirection, camUp, llookat_matrix);
-    glm_mat4_copy(lrot_matrix, *rot_matrix);
-    glm_mat4_copy(lmove_matrix, *move_matrix);
-    glm_mat4_copy(lscale_matrix, *scale_matrix);
-    glm_mat4_copy(lproj_matrix, *proj_matrix);
-    glm_mat4_copy(llookat_matrix, *lookat_matrix);
-    glm_mat4_copy(lcam_rot_matrix, *cam_rot_matrix);
+    return 0;
+}
+
+int init_graphics (void) {
+    cameraQuery = ecs_query_new(world, "[in] Camera, [in] Transform");
     return 0;
 }

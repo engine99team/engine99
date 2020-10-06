@@ -2,7 +2,6 @@
 
 #include <log.h>
 #include <flecs.h>
-#include <flecs_meta.h>
 #include <nuklear_include.h>
 #include <graphics_components.h>
 
@@ -24,7 +23,6 @@ int main() {
         log_fatal("Can't init flecs world");
         return -1;
     }
-    ECS_IMPORT(world, FlecsMeta);
     res = create_window();
     if (res != 0) {
         log_fatal("Can't create SDL window");
@@ -41,11 +39,12 @@ int main() {
     nk_sdl_font_stash_begin(&atlas);
     nk_sdl_font_stash_end();
     init_stages();
-    init_lights();
     init_core_components();
     init_graphics_components();
     init_simple_meshes();
     init_models();
+    init_lights();
+    init_graphics();
     ECS_TAG_DEFINE(world, global_tag);
     ECS_ENTITY(world, global_entity, global_tag);
 

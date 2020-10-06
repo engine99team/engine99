@@ -17,6 +17,7 @@ float   a = 0,
         d = 0;
 vec3 rot;
 bool isRotating;
+static ecs_query_t *cameraQuery;
 
 int example_events (SDL_Event* event, float delta_time) {
     if (event->type == SDL_KEYDOWN) {
@@ -226,8 +227,7 @@ void example_imgui_tri (ecs_iter_t* it) {
 
 void example_imgui_fps(ecs_iter_t* it) {
     Transform* camTrans;
-    ecs_query_t *query = ecs_query_new(world, "Camera, Transform");
-    ecs_iter_t it1 = ecs_query_iter(query);
+    ecs_iter_t it1 = ecs_query_iter(cameraQuery);
     while (ecs_query_next(&it1)) {
         camTrans = ecs_column(&it1, Transform, 2);
     }
@@ -288,7 +288,7 @@ int init_example(void) {
     load_png_texture("textures/grimy-metal-normal-ogl.png", &normal_texture1);
     load_png_texture("textures/grimy-metal-roughness.png", &roughness_texture1);
 
-
+    cameraQuery = ecs_query_new(world, "[in] Camera, [in] Transform");
     Transform transform1 = {
                 .position = {0, 0.1f, -4.f},
                 .rotation = {-CGLM_PI / 3, -CGLM_PI / 3, 0},

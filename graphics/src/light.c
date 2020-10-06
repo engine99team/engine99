@@ -5,18 +5,23 @@ ECS_COMPONENT_DECLARE(PointLight);
 ECS_COMPONENT_DECLARE(DirectLight);
 ECS_COMPONENT_DECLARE(SpotLight);
 
+static ecs_query_t* plQuery;
+static ecs_query_t* dlQuery;
+static ecs_query_t* slQuery;
+
+
 int init_lights (void) {
     ECS_COMPONENT_DEFINE(world, PointLight);
     ECS_COMPONENT_DEFINE(world, DirectLight);
     ECS_COMPONENT_DEFINE(world, SpotLight);
+    plQuery = ecs_query_new(world, "[in] PointLight, [in] Transform");
+    dlQuery = ecs_query_new(world, "[in] DirectLight");
+    slQuery = ecs_query_new(world, "[in] SpotLight, [in] Transform");
     return 0;
 }
 
 int load_lights (GLuint shader_program) {
     int i, j;
-    ecs_query_t* plQuery = ecs_query_new(world, "PointLight, Transform");
-    ecs_query_t* dlQuery = ecs_query_new(world, "DirectLight");
-    ecs_query_t* slQuery = ecs_query_new(world, "SpotLight, Transform");
     ecs_iter_t plIter = ecs_query_iter(plQuery);
     ecs_iter_t dlIter = ecs_query_iter(dlQuery);
     ecs_iter_t slIter = ecs_query_iter(slQuery);
