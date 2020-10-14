@@ -33,9 +33,9 @@ int load_lights (GLuint shader_program) {
     while (ecs_query_next(&plIter)) {
         plCount = plIter.count;
         glUniform1i(glGetUniformLocation(shader_program, "point_lights_count"), plCount);
-        for (j = 0; j < plCount; j++) {
-            PointLight* pointLight = ecs_column(&plIter + j, PointLight, 1);
-            Transform* transform = ecs_column(&plIter + j, Transform, 2);
+        PointLight* pointLight = ecs_column(&plIter, PointLight, 1);
+        Transform* transform = ecs_column(&plIter, Transform, 2);
+        for (j = 0; j < plCount; j++, pointLight++, transform++) {
             sprintf(buf, "point_lights[%d].pos", i);
             glUniform3f(glGetUniformLocation(shader_program, buf), transform->position[0],
                         transform->position[1], transform->position[2]);
@@ -49,8 +49,8 @@ int load_lights (GLuint shader_program) {
     while (ecs_query_next(&dlIter)) {
         dlCount = dlIter.count;
         glUniform1i(glGetUniformLocation(shader_program, "direct_lights_count"), dlCount);
-        for (j = 0; j < dlCount; j++) {
-            DirectLight *directLight = ecs_column(&dlIter + j, DirectLight, 1);
+        DirectLight *directLight = ecs_column(&dlIter, DirectLight, 1);
+        for (j = 0; j < dlCount; j++, directLight++) {
             sprintf(buf, "direct_lights[%d].direction", i);
             glUniform3f(glGetUniformLocation(shader_program, buf), directLight->direction[0],
                         directLight->direction[1], directLight->direction[2]);
@@ -64,9 +64,9 @@ int load_lights (GLuint shader_program) {
     while (ecs_query_next(&slIter)) {
         slCount = slIter.count;
         glUniform1i(glGetUniformLocation(shader_program, "spot_lights_count"), slCount);
-        for (j = 0; j < slCount; j++) {
-            SpotLight* spotLight = ecs_column(&slIter + j, SpotLight, 1);
-            Transform* transform = ecs_column(&slIter + j, Transform, 2);
+        SpotLight* spotLight = ecs_column(&slIter, SpotLight, 1);
+        Transform* transform = ecs_column(&slIter, Transform, 2);
+        for (j = 0; j < slCount; j++, spotLight++, transform++) {
             sprintf(buf, "spot_lights[%d].pos", i);
             glUniform3f(glGetUniformLocation(shader_program, buf), transform->position[0], transform->position[1],
                         transform->position[2]);
